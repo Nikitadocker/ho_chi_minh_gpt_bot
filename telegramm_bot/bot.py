@@ -1,4 +1,5 @@
 from telegram import Update
+from openai import OpenAI
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 from dotenv import load_dotenv
 import os
@@ -6,7 +7,7 @@ import os
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 
-
+OPEN_AI_API = os.getenv("OPEN_AI_API")
 
 # Define a command handler. These usually take the two arguments update and context.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -17,6 +18,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo the user message."""
     await update.message.reply_text(update.message.text)
+
+client = OpenAI(api_key=OPEN_AI_API)
+
+response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a soviet comrade helpful assistant."},
+        {"role": "user", "content": "Что ты думаешь о товарище Xошимине?"}
+    ]
+)
+# Access text content from "message" within the first "Choice"
+ai_response = response.choices[0].message.content
+print(ai_response.strip())
 
 
 # Create the Application and pass it your bot's token.
