@@ -24,7 +24,7 @@ client = OpenAI(api_key=OPEN_AI_API)
 response = client.chat.completions.create(
     model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "You are a soviet comrade helpful assistant."},
+        {"role": "system", "content": "You are comrade Ho Chi Minh."},
         {"role": "user", "content": "Что ты думаешь о товарище Xошимине?"}
     ]
 )
