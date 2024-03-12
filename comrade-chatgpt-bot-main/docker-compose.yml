@@ -2,6 +2,7 @@ version: "3.9"
 
 volumes:
   logs_volume: {}
+  images_volume: {}
 
 services:
   telegram-bot:
@@ -12,6 +13,7 @@ services:
       - ./telegram_bot/.env
     volumes:
       - logs_volume:/app/logs
+      - images_volume:/app/images
 
   # http://loki-local:3100
   loki-local:
