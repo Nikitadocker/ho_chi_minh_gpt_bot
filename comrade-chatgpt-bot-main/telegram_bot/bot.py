@@ -60,19 +60,11 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     )
     image_url = response_image.data[0].url 
     responce_url = requests.get(image_url)
-    with open("image.png","wb") as f:
+    with open("./images/image.png","wb") as f:     
         f.write(responce_url.content)
-    await update.message.reply_photo(open("image.png", "rb"))   
-    # await update.message.reply_text(image_url)
+    await update.message.reply_photo(open("./images/image.png", "rb"))   
     
-#     image_file = response_image.data[0].url
-# response = requests.get(image_file)
-# with open("image.png", "wb") as f:
-#     f.write(response.content)
-# await update.message.reply_photo(open("image.png", "rb"))
-
-
-# 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
+    # 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
 async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_message = update.message.text
 
