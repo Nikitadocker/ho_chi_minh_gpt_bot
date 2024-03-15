@@ -7,4 +7,4 @@ scrape_configs:
       - targets:
           - localhost
         labels:
-          __path__: /logs/logfmter_bot.log
+          __path__: /logs/bot.log

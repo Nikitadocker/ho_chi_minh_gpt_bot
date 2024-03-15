@@ -4,7 +4,6 @@ import logging
 import os
 import requests
 from openai import OpenAI
-from logfmter import Logfmter
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 from telegram import ForceReply, Update
@@ -16,27 +15,16 @@ from telegram.ext import (
     filters,
 )
 
-formatter = Logfmter(
-    keys=["timestamp", "logger", "at", "process", "msq"],
-    mapping={
-        "timestamp": "asctime",
-        "logger": "name",
-        "at": "levelname",
-        "process": "processName",
-        "msg": "message",
-    },
+
+# Enable logging
+logging.basicConfig(
+    format='timestamp=%(asctime)s logger=%(name)s level=%(levelname)s msg="%(message)s"',
     datefmt="%Y-%m-%dT%H:%M:%S",
+    level=logging.INFO,  #уровень логов
+    handlers=[logging.FileHandler("./logs/bot.log"), logging.StreamHandler()],
 )
-
-handler_stdout = logging.StreamHandler()
-handler_file = logging.FileHandler("./logs/logfmter_bot.log")
-handler_stdout.setFormatter(formatter)
-handler_file.setFormatter(formatter)
-logging.basicConfig(handlers=[handler_stdout, handler_file], level=logging.INFO)
-
-
 # set higher logging level for httpx to avoid all GET and POST requests being logged
-# logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
@@ -68,17 +56,15 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         prompt="Vietnamese resident",
         size="1024x1024",
         quality="standard",
-        n=1,
+         n=1,
     )
-    image_url = response_image.data[0].url
+    image_url = response_image.data[0].url 
     responce_url = requests.get(image_url)
-    with open("./images/image.png", "wb") as f:
+    with open("./images/image.png","wb") as f:     
         f.write(responce_url.content)
-    await update.message.reply_photo(open("./images/image.png", "rb"))
-
+    await update.message.reply_photo(open("./images/image.png", "rb"))   
+    
     # 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
-
-
 async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_message = update.message.text
 
