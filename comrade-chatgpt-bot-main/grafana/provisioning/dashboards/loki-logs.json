@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -42,7 +42,7 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 14,
+        "w": 24,
         "x": 0,
         "y": 1
       },
@@ -77,6 +77,49 @@
         "type": "loki",
         "uid": "${Data_source}"
       },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": false,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${Data_source}"
+          },
+          "editorMode": "code",
+          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logfmt | logger = `$logger`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Loki logs",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {}
+        }
+      ],
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${Data_source}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -97,7 +140,7 @@
         "h": 7,
         "w": 14,
         "x": 0,
-        "y": 8
+        "y": 15
       },
       "id": 5,
       "options": {
@@ -161,7 +204,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "/logs/logfmter_bot.log",
           "value": "/logs/logfmter_bot.log"
         },
@@ -205,17 +248,44 @@
         "query": "",
         "skipUrlSync": false,
         "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "__main__",
+          "value": "__main__"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "logger",
+        "options": [
+          {
+            "selected": false,
+            "text": "httpx",
+            "value": "httpx"
+          },
+          {
+            "selected": true,
+            "text": "__main__",
+            "value": "__main__"
+          }
+        ],
+        "query": "httpx,__main__",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
       }
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Loki Logs",
   "uid": "d802b7ed-e9a0-4865-a56a-3551d9e1e1f5",
-  "version": 5,
+  "version": 1,
   "weekStart": ""
 }
