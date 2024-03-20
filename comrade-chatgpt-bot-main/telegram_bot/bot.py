@@ -50,6 +50,7 @@ logger = logging.getLogger(__name__)
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
+    logging.info(f"User {user.id} ({user.username}) started the bot.")
     await update.message.reply_html(
         rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
@@ -81,8 +82,12 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_message = update.message.text
+    user = update.effective_user
 
-    logger.info("Пользователь написал сообщение {0}".format(user_message))
+    # logger.info("Пользователь написал сообщение {0}".format(user_message))
+
+    logging.info(f"User {user.id} ({user.username}) requested sent text: '{user_message}'")
+   
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
