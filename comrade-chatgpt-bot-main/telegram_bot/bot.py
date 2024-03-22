@@ -61,12 +61,17 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Help!")
 
-
+ # This function will be used for generate image
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_message = update.message.text
+    user = update.effective_user
+
+    prompt = ' '.join(context.args) # принимать в качестве promзt аргументы отпользователя
+    logging.info(f"User {user.id} ({user.username}) requested to generate image")
     """Generate image when the command /image is issued"""
     response_image = client.images.generate(
         model="dall-e-3",
-        prompt="Vietnamese resident",
+        prompt=prompt,
         size="1024x1024",
         quality="standard",
         n=1,
@@ -87,6 +92,7 @@ async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
     logging.info(f"User {user.id} ({user.username}) requested sent text: '{user_message}'")
+    
    
     try:
         response = client.chat.completions.create(
