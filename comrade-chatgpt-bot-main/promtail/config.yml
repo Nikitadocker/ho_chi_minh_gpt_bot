@@ -10,6 +10,14 @@ scrape_configs:
         job: telegram_bot
         __path__: /logs/logfmter_bot.log  # Change this to the path of your log files
     pipeline_stages:
-    - logfmt:
-        mapping:
+      - logfmt:
+          mapping:
+            at: at
+            process: process
+            logger: logger
+            msg: msg
+      - labels:
+          at:
+          process:
           logger:
+          msg:
