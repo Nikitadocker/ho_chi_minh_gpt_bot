@@ -121,9 +121,10 @@ def main() -> None:
     # on different commands - answer in Telegram
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
-
     application.add_handler(CommandHandler("image", generate_image))
-
+    application.add_handler(CommandHandler("allow", allow_user))
+    application.add_handler(CommandHandler("disable", disable_user))
+    application.add_handler(CommandHandler("listallowed", list_allowed_users))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gpt_prompt))
 
     # Run the bot until the user presses Ctrl-C
