@@ -1,3 +1,4 @@
 .idea
 telegram_bot/.env
 grafana/.env
+.env
