@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import asyncpg
 import logging
 import os
 import requests
@@ -45,6 +46,15 @@ logger = logging.getLogger(__name__)
 # Replace None with your OpenAI API key
 
 
+async def db_connect():
+    return await asyncpg.connect(
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
+        database=os.getenv("POSTGRES_DB"),
+        host=os.getenv("DB_HOST"),
+    )
+
+
 # Define a few command handlers. These usually take the two arguments update and
 # context.
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -57,16 +67,113 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
+async def validate_admin_and_extract_user_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> (bool, str):
+    admin_user_id = os.getenv("ADMIN_USER_ID")
+    if str(update.effective_user.id) != admin_user_id:
+        logger.info(f"User {update.effective_user.id} is not allowed to run this command.")
+        await update.message.reply_text("Access denied.")
+        return False, ""
+    if not context.args:
+        await update.message.reply_text("Please specify a user ID.")
+        return False, ""
+    user_id = context.args[0]
+    return True, user_id
+
+
+async def is_user_allowed(user_id: int) -> bool:
+    conn = await db_connect()
+    try:
+        existing_user = await conn.fetchval(
+            "SELECT user_id FROM allowed_users WHERE user_id = $1", user_id
+        )
+        return existing_user is not None
+    finally:
+        await conn.close()
+
+
+async def allow_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    is_valid, user_id = await validate_admin_and_extract_user_id(update, context)
+    if not is_valid:
+        return  # Validation failed
+    conn = await db_connect()
+    try:
+        # Check if user is already allowed
+        existing_user = await conn.fetchval("SELECT user_id FROM allowed_users WHERE user_id = $1", user_id)
+        if existing_user:
+            logger.info(f"Attempted to allow an already allowed user: {user_id}")
+            await update.message.reply_text(f"User {user_id} is already allowed.")
+            return
+
+        await conn.execute("INSERT INTO allowed_users (user_id) VALUES ($1)", user_id)
+        logger.info(f"User {user_id} has been allowed.")
+        await update.message.reply_text(f"User {user_id} is allowed from now.")
+    finally:
+        await conn.close()
+
+
+async def disable_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.effective_user.id
+    is_valid = await validate_admin(update, context)
+    if not is_valid:
+        return  # Validation failed
+    conn = await db_connect()
+    try:
+        # Check if user is not allowed
+        existing_user = await conn.fetchval(
+            "SELECT user_id FROM allowed_users WHERE user_id = $1", int(user_id)
+        )
+        if not existing_user:
+            logger.info(
+                f"Attempted to disable a user who is not currently allowed: {user_id}"
+            )
+            await update.message.reply_text(f"User {user_id} is not currently allowed.")
+            return
+
+        await conn.execute("DELETE FROM allowed_users WHERE user_id = $1", int(user_id))
+        logger.info(f"User {user_id} access has been revoked.")
+        await update.message.reply_text(f"User {user_id} access revoked.")
+    finally:
+        await conn.close()
+
+
+async def list_allowed_users(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    conn = await db_connect()
+    try:
+        users = await conn.fetch("SELECT user_id FROM allowed_users ORDER BY user_id")
+        if users:
+            user_ids = ", ".join([str(user["user_id"]) for user in users])
+            logger.info(f"Allowed users: {user_ids}")
+        else:
+            logger.info("No users are currently allowed.")
+        await update.message.reply_text("Logging allowed users...")
+    finally:
+        await conn.close()
+
+
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Help!")
 
- # This function will be used for generate image
+
+# This function will be used for generate image
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_message = update.message.text
     user = update.effective_user
 
-    prompt = ' '.join(context.args) # принимать в качестве promзt аргументы отпользователя
+    if not await is_user_allowed(user.id):
+        logger.info(
+            f"User {user.id} ({user.username}) tried to generate an image but is not allowed."
+        )
+        await update.message.reply_text(
+            "Sorry, you are not allowed to generate images."
+        )
+        return
+
+    prompt = " ".join(
+        context.args
+    )  # принимать в качестве promзt аргументы отпользователя
     logging.info(f"User {user.id} ({user.username}) requested to generate image")
     """Generate image when the command /image is issued"""
     response_image = client.images.generate(
@@ -89,11 +196,19 @@ async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     user_message = update.message.text
     user = update.effective_user
 
+    if not await is_user_allowed(user.id):
+        logger.info(
+            f"User {user.id} ({user.username}) tried to use GPT prompt but is not allowed."
+        )
+        await update.message.reply_text("Sorry, you are not allowed to text with me.")
+        return
+
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
-    logging.info(f"User {user.id} ({user.username}) requested sent text: '{user_message}'")
-    
-   
+    logging.info(
+        f"User {user.id} ({user.username}) requested sent text: '{user_message}'"
+    )
+
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
