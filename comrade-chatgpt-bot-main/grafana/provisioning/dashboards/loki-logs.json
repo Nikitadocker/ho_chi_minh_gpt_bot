@@ -63,7 +63,7 @@
             "uid": "${Data_source}"
           },
           "editorMode": "code",
-          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger`",
+          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger` | at =`$log_level`",
           "queryType": "range",
           "refId": "A"
         }
@@ -85,7 +85,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Loki Local",
           "value": "P639F1043A754246A"
         },
@@ -103,7 +103,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "/logs/logfmter_bot.log",
           "value": "/logs/logfmter_bot.log"
         },
@@ -151,8 +151,8 @@
       {
         "current": {
           "selected": true,
-          "text": "root",
-          "value": "root"
+          "text": "httpx",
+          "value": "httpx"
         },
         "datasource": {
           "type": "loki",
@@ -218,7 +218,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
