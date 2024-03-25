@@ -8,7 +8,6 @@ services:
   telegram-bot:
     build:
       context: ./telegram_bot
-    restart: always
     env_file:
       - ./telegram_bot/.env
     volumes:
