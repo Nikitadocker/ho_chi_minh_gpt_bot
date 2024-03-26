@@ -1,0 +1,10 @@
+# ./grafana/provisioning/datasources/loki-datasource.yml
+apiVersion: 1
+
+datasources:
+  - name: Loki Local
+    type: loki
+    access: proxy
+    url: http://loki-local:3100
+    jsonData:
+      maxLines: 1000
