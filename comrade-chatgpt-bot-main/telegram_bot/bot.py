@@ -8,6 +8,7 @@ from openai import OpenAI
 from logfmter import Logfmter
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", 0.10))  # Default price per image
 from telegram import ForceReply, Update
 from telegram.ext import (
     Application,
@@ -87,6 +88,26 @@ async def is_user_allowed(user_id: int) -> bool:
             "SELECT user_id FROM allowed_users WHERE user_id = $1", user_id
         )
         return existing_user is not None
+    finally:
+        await conn.close()
+
+
+async def check_user_balance(user_id: int) -> (bool, float):
+    """
+    Checks if the user has enough balance to generate an image.
+    Returns a tuple (bool, float) where bool indicates if the user has enough balance,
+    and float represents the current balance of the user.
+    """
+    conn = await db_connect()
+    try:
+        balance = await conn.fetchval(
+            "SELECT balance FROM user_balances WHERE user_id = $1", user_id
+        )
+        if (
+            balance is None
+        ):  # This means the user does not exist in the user_balances table
+            return False, 0.0
+        return balance >= IMAGE_PRICE, balance
     finally:
         await conn.close()
 
@@ -202,6 +223,14 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
         return
 
+        # Check user's balance
+    has_enough_balance, current_balance = await check_user_balance(user.id)
+    if not has_enough_balance:
+        await update.message.reply_text(
+            f"Sorry, your current balance ({current_balance}₪) is not enough to generate an image. Price per image is {IMAGE_PRICE}₪."
+        )
+        return
+
     if not context.args:
         logger.error(
             f"User {user.id} ({user.username}) did not provide a prompt for the /image command."
@@ -230,11 +259,24 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         with open("./images/image.png", "wb") as f:
             f.write(responce_url.content)
         await update.message.reply_photo(open("./images/image.png", "rb"))
+        
+        conn = await db_connect()
+        try:
+            await conn.execute(
+                "UPDATE user_balances SET balance = balance - $1, images_generated = images_generated + 1 WHERE user_id = $2",
+                IMAGE_PRICE, user.id
+            )
+            logger.info(f"Image generated for user {user.id}. Balance deducted by {IMAGE_PRICE}.")
+        finally:
+                await conn.close()
+         
     except Exception as e:
         logging.error(f"Error generating image for prompt: '{prompt}': {e}")
         await update.message.reply_text(
             "Sorry, there was an error generating your image."
         )
+        
+        
 
     # 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
 

@@ -63,7 +63,7 @@
             "uid": "${Data_source}"
           },
           "editorMode": "code",
-          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger` | at =`$log_level`",
+          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger` | at =~`$log_level`",
           "queryType": "range",
           "refId": "A"
         }
@@ -132,8 +132,8 @@
       {
         "current": {
           "selected": false,
-          "text": "httpx",
-          "value": "httpx"
+          "text": "__main__",
+          "value": "__main__"
         },
         "datasource": {
           "type": "loki",
@@ -159,9 +159,15 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "INFO",
-          "value": "INFO"
+          "selected": true,
+          "text": [
+            "ERROR",
+            "INFO"
+          ],
+          "value": [
+            "ERROR",
+            "INFO"
+          ]
         },
         "datasource": {
           "type": "loki",
@@ -170,7 +176,7 @@
         "definition": "",
         "hide": 0,
         "includeAll": false,
-        "multi": false,
+        "multi": true,
         "name": "log_level",
         "options": [],
         "query": {
@@ -187,7 +193,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "",
           "value": ""
         },
