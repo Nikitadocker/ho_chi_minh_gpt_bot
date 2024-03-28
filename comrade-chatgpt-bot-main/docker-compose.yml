@@ -16,7 +16,6 @@ services:
       DB_HOST: ${DB_HOST}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
-      ADMIN_USER_ID: ${ADMIN_USER_ID}
       IMAGE_PRICE: ${IMAGE_PRICE}
     volumes:
       - logs_volume:/app/logs
@@ -70,5 +69,21 @@ services:
     environment:
       LIQUIBASE_COMMAND_USERNAME: ${POSTGRES_USER}
       LIQUIBASE_COMMAND_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
+
+
+  user-management:
+    build:
+      context: ./user_manager
+    environment:
+      FLASK_APP: manager.py
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      DB_HOST: ${DB_HOST}
+      FLASK_SECRET_KEY: ${FLASK_SECRET_KEY}
+    ports:
+      - "5005:5000"
     depends_on:
       - postgres
