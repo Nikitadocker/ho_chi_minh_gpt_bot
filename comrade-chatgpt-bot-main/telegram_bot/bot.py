@@ -61,7 +61,7 @@ async def db_connect():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    logging.info(f"User {user.id} ({user.username}) started the bot.")
+    logger.info(f"User {user.id} ({user.username}) started the bot.")
     await update.message.reply_html(
         rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
@@ -138,7 +138,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     prompt = " ".join(
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
-    logging.info(f"User {user.id} ({user.username}) requested to generate image")
+    logger.info(f"User {user.id} ({user.username}) requested to generate image")
 
     try:
         """Generate image when the command /image is issued"""
@@ -169,7 +169,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await conn.close()
 
     except Exception as e:
-        logging.error(f"Error generating image for prompt: '{prompt}': {e}")
+        logger.error(f"Error generating image for prompt: '{prompt}': {e}")
         await update.message.reply_text(
             "Sorry, there was an error generating your image."
         )
@@ -190,7 +190,7 @@ async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
-    logging.info(
+    logger.info(
         f"User {user.id} ({user.username}) requested sent text: '{user_message}'"
     )
 
