@@ -45,6 +45,17 @@
             {% endfor %}
         </ul>
     </div>
+
+    <div class="mt-5">
+        <h3>Currently Balance Users</h3>
+        <ul class="list-group">
+            {% for user in users_balance %}
+            <li class="list-group-item">
+              {{ user[0] }} - {{ user[1] }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

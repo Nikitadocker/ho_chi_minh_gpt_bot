@@ -15,15 +15,17 @@ def get_db_connection():
     return conn
 
 
-@app.route('/')
+@app.route('/') # опряделяем маршрут для фунцкции def index
 def index():
     conn = get_db_connection()
-    cur = conn.cursor()
+    cur = conn.cursor()  # сusrsor позволяет выполнять код python ,в postgres в сенсе бд
     cur.execute("SELECT user_id FROM allowed_users ORDER BY user_id")
-    allowed_users = cur.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('index.html', allowed_users=allowed_users)
+    allowed_users = cur.fetchall() #импортируем строки из запрос sql
+    cur.execute("SELECT user_id, balance FROM user_balances")
+    users_balance = cur.fetchall() #импортируем строки из запрос sql
+    cur.close() # закрываем курсор
+    conn.close() # закрываем соединение
+    return render_template('index.html', allowed_users=allowed_users, users_balance=users_balance) # список пользователей будем динамическими данными
 
 
 @app.route('/allow', methods=['POST'])
@@ -64,6 +66,29 @@ def disable_user():
         cur.close()
         conn.close()
     return redirect(url_for('index'))
+
+
+@app.route ('/add_balance', methods=['POST'])
+def add_users_balance():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    user_id = request.form.get('user_id')
+    balance_to_add = request.form.get('balance_to_add')
+    cur.execute("SELECT  balance  FROM user_balances where user_id = %s", (user_id))
+    current_balance = cur.fetchone()
+    new_balance = current_balance[0] + balance_to_add
+    cur.execute("INSERT INTO user_balances (user_id =%s balance = %s) VALUES (%s, %s)", (user_id, new_balance))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return redirect(url_for('index'))
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
