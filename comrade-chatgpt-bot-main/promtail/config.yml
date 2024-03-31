@@ -21,3 +21,10 @@ scrape_configs:
           process:
           logger:
           msg:
+  - job_name: user-management
+    static_configs:
+    - targets:
+        - localhost
+      labels:
+        job: telegram_bot
+        __path__: "./logs/logfmter_user_management.log"  
