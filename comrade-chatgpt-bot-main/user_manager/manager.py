@@ -1,10 +1,34 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 import os
+import logging
+from logfmter import Logfmter
 
 app = Flask(__name__, template_folder='templates')
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
+
+formatter = Logfmter(
+    keys=["timestamp", "logger", "at", "process", "msq"],
+    mapping={
+        "timestamp": "asctime",
+        "logger": "name",
+        "at": "levelname",
+        "process": "processName",
+        "msg": "message",
+    },
+    datefmt="%Y-%m-%dT%H:%M:%S",
+)
+
+
+handler_stdout = logging.StreamHandler()
+handler_file = logging.FileHandler("./logs/logfmter_user_management.log")
+handler_stdout.setFormatter(formatter)
+handler_file.setFormatter(formatter)
+logging.basicConfig(handlers=[handler_stdout, handler_file], level=logging.INFO)
+
+
+logger = logging.getLogger(__name__)
 
 def get_db_connection():
     conn = psycopg2.connect(
