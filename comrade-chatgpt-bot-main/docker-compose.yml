@@ -4,7 +4,6 @@ volumes:
   logs_volume: {}
   images_volume: {}
   postgres_data: {}
-  logs_web: {}
 
 services:
   telegram-bot:
@@ -85,7 +84,7 @@ services:
       DB_HOST: ${DB_HOST}
       FLASK_SECRET_KEY: ${FLASK_SECRET_KEY}
     volumes:
-      - logs_web:/usr/src/app/logs
+      - logs_volume:/usr/src/app/logs
     ports:
       - "5005:5000"
     depends_on:
