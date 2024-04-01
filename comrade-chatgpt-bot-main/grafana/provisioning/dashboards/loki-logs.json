@@ -63,7 +63,7 @@
             "uid": "${Data_source}"
           },
           "editorMode": "code",
-          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger` | at =~`$log_level`",
+          "expr": "{filename=\"$Stream_selector\"} |= `$filter` | logger = `$logger` | at =~`$log_level`",
           "queryType": "range",
           "refId": "A"
         }
@@ -103,9 +103,9 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "/logs/logfmter_bot.log",
-          "value": "/logs/logfmter_bot.log"
+          "selected": true,
+          "text": "/logs/logfmter_user_management.log",
+          "value": "/logs/logfmter_user_management.log"
         },
         "datasource": {
           "type": "loki",
@@ -161,11 +161,9 @@
         "current": {
           "selected": true,
           "text": [
-            "ERROR",
             "INFO"
           ],
           "value": [
-            "ERROR",
             "INFO"
           ]
         },
@@ -213,7 +211,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},

@@ -27,4 +27,16 @@ scrape_configs:
         - localhost
       labels:
         job: telegram_bot
-        __path__: "./logs/logfmter_user_management.log"  
+        __path__: "./logs/logfmter_user_management.log"
+    pipeline_stages:
+      - logfmt:
+          mapping:
+            at: at
+            process: process
+            logger: logger
+            msg: msg
+      - labels:
+          at:
+          process:
+          logger:
+          msg:
