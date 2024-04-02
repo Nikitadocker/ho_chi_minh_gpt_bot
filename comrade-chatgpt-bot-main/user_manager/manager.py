@@ -99,10 +99,10 @@ def add_users_balance():
     cur = conn.cursor()
     user_id = request.form.get('user_id')
     balance_to_add = Decimal(request.form.get('balance_to_add', type=float))
-    cur.execute("SELECT  balance  FROM user_balances where user_id = %s", (user_id))
+    cur.execute("SELECT  balance  FROM user_balances where user_id = %s", (user_id,))
     current_balance = cur.fetchone()
     new_balance = current_balance[0] + balance_to_add
-    cur.execute("INSERT INTO user_balances (user_id =%s balance = %s) VALUES (%s, %s)", (user_id, new_balance))
+    cur.execute("UPDATE user_balances SET balance = %s WHERE user_id = %s", (new_balance, user_id))
     conn.commit()
     cur.close()
     conn.close()
