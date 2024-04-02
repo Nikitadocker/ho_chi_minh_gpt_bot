@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 import os
 import logging
+from decimal import Decimal
 from logfmter import Logfmter
 
 app = Flask(__name__, template_folder='templates')
@@ -97,7 +98,7 @@ def add_users_balance():
     conn = get_db_connection()
     cur = conn.cursor()
     user_id = request.form.get('user_id')
-    balance_to_add = request.form.get('balance_to_add')
+    balance_to_add = Decimal(request.form.get('balance_to_add', type=float))
     cur.execute("SELECT  balance  FROM user_balances where user_id = %s", (user_id))
     current_balance = cur.fetchone()
     new_balance = current_balance[0] + balance_to_add
