@@ -61,24 +61,11 @@ async def db_connect():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    logging.info(f"User {user.id} ({user.username}) started the bot.")
+    logger.info(f"User {user.id} ({user.username}) started the bot.")
     await update.message.reply_html(
         rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
     )
-
-
-async def validate_admin(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> (bool, str):
-    admin_user_id = int(os.getenv("ADMIN_USER_ID"))
-    if update.effective_user.id != admin_user_id:
-        logger.info(
-            f"User {update.effective_user.id} is not allowed to run this command."
-        )
-        await update.message.reply_text("Access denied.")
-        return False
-    return True
 
 
 async def is_user_allowed(user_id: int) -> bool:
@@ -108,98 +95,6 @@ async def check_user_balance(user_id: int) -> (bool, float):
         ):  # This means the user does not exist in the user_balances table
             return False, 0.0
         return balance >= IMAGE_PRICE, balance
-    finally:
-        await conn.close()
-
-
-async def allow_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    is_admin = await validate_admin(update, context)
-    if not is_admin:
-        return
-    if not context.args:
-        await update.message.reply_text("Please specify a user ID.")
-        return
-    try:
-        user_id_to_allow = int(context.args[0])
-    except ValueError:
-        await update.message.reply_text(
-            "Invalid user ID format. Please provide a valid user ID."
-        )
-        return
-    conn = await db_connect()
-    try:
-        # Check if user is already allowed
-        existing_user = await conn.fetchval(
-            "SELECT user_id FROM allowed_users WHERE user_id = $1",
-            int(user_id_to_allow),
-        )
-        if existing_user:
-            logger.info(
-                f"Attempted to allow an already allowed user: {user_id_to_allow}"
-            )
-            await update.message.reply_text(
-                f"User {user_id_to_allow} is already allowed."
-            )
-            return
-
-        await conn.execute(
-            "INSERT INTO allowed_users (user_id) VALUES ($1)", int(user_id_to_allow)
-        )
-        logger.info(f"User {user_id_to_allow} has been allowed.")
-        await update.message.reply_text(f"User {user_id_to_allow} is allowed from now.")
-    finally:
-        await conn.close()
-
-
-async def disable_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    is_admin = await validate_admin(update, context)
-    if not is_admin:
-        return
-    if not context.args:
-        await update.message.reply_text("Please specify a user ID.")
-        return
-    try:
-        user_id_to_disable = int(context.args[0])
-    except ValueError:
-        await update.message.reply_text(
-            "Invalid user ID format. Please provide a valid user ID."
-        )
-        return
-    conn = await db_connect()
-    try:
-        # Check if user is not allowed
-        existing_user = await conn.fetchval(
-            "SELECT user_id FROM allowed_users WHERE user_id = $1",
-            int(user_id_to_disable),
-        )
-        if not existing_user:
-            logger.info(
-                f"Attempted to disable a user who is not currently allowed: {user_id_to_disable}"
-            )
-            await update.message.reply_text(
-                f"User {user_id_to_disable} is not currently allowed."
-            )
-            return
-
-        await conn.execute(
-            "DELETE FROM allowed_users WHERE user_id = $1", int(user_id_to_disable)
-        )
-        logger.info(f"User {user_id_to_disable} access has been revoked.")
-        await update.message.reply_text(f"User {user_id_to_disable} access revoked.")
-    finally:
-        await conn.close()
-
-
-async def log_allowed_users(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    conn = await db_connect()
-    try:
-        users = await conn.fetch("SELECT user_id FROM allowed_users ORDER BY user_id")
-        if users:
-            user_ids = ", ".join([str(user["user_id"]) for user in users])
-            logger.info(f"Allowed users: {user_ids}")
-        else:
-            logger.info("No users are currently allowed.")
-        await update.message.reply_text("Logging allowed users...")
     finally:
         await conn.close()
 
@@ -243,7 +138,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     prompt = " ".join(
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
-    logging.info(f"User {user.id} ({user.username}) requested to generate image")
+    logger.info(f"User {user.id} ({user.username}) requested to generate image")
 
     try:
         """Generate image when the command /image is issued"""
@@ -259,24 +154,25 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         with open("./images/image.png", "wb") as f:
             f.write(responce_url.content)
         await update.message.reply_photo(open("./images/image.png", "rb"))
-        
+
         conn = await db_connect()
         try:
             await conn.execute(
                 "UPDATE user_balances SET balance = balance - $1, images_generated = images_generated + 1 WHERE user_id = $2",
-                IMAGE_PRICE, user.id
+                IMAGE_PRICE,
+                user.id,
             )
-            logger.info(f"Image generated for user {user.id}. Balance deducted by {IMAGE_PRICE}.")
+            logger.info(
+                f"Image generated for user {user.id}. Balance deducted by {IMAGE_PRICE}."
+            )
         finally:
-                await conn.close()
-         
+            await conn.close()
+
     except Exception as e:
-        logging.error(f"Error generating image for prompt: '{prompt}': {e}")
+        logger.error(f"Error generating image for prompt: '{prompt}': {e}")
         await update.message.reply_text(
             "Sorry, there was an error generating your image."
         )
-        
-        
 
     # 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
 
@@ -294,7 +190,7 @@ async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
 
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
-    logging.info(
+    logger.info(
         f"User {user.id} ({user.username}) requested sent text: '{user_message}'"
     )
 
@@ -326,9 +222,6 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("image", generate_image))
-    application.add_handler(CommandHandler("allow", allow_user))
-    application.add_handler(CommandHandler("disable", disable_user))
-    application.add_handler(CommandHandler("logallowed", log_allowed_users))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gpt_prompt))
 
     # Run the bot until the user presses Ctrl-C

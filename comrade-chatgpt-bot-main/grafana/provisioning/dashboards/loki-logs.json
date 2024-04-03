@@ -63,7 +63,7 @@
             "uid": "${Data_source}"
           },
           "editorMode": "code",
-          "expr": "{filename=\"/logs/logfmter_bot.log\"} |= `$filter` | logger = `$logger` | at =~`$log_level`",
+          "expr": "{filename=\"$filename\"} |= `$filter` | logger =~ `$logger` | at =~`$log_level`",
           "queryType": "range",
           "refId": "A"
         }
@@ -103,9 +103,9 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "/logs/logfmter_bot.log",
-          "value": "/logs/logfmter_bot.log"
+          "selected": true,
+          "text": "/logs/logfmter_user_management.log",
+          "value": "/logs/logfmter_user_management.log"
         },
         "datasource": {
           "type": "loki",
@@ -115,7 +115,7 @@
         "hide": 0,
         "includeAll": false,
         "multi": false,
-        "name": "Stream_selector",
+        "name": "filename",
         "options": [],
         "query": {
           "label": "filename",
@@ -131,9 +131,15 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "__main__",
-          "value": "__main__"
+          "selected": true,
+          "text": [
+            "werkzeug",
+            "manager"
+          ],
+          "value": [
+            "werkzeug",
+            "manager"
+          ]
         },
         "datasource": {
           "type": "loki",
@@ -142,13 +148,13 @@
         "definition": "",
         "hide": 0,
         "includeAll": false,
-        "multi": false,
+        "multi": true,
         "name": "logger",
         "options": [],
         "query": {
           "label": "logger",
           "refId": "LokiVariableQueryEditor-VariableQuery",
-          "stream": "",
+          "stream": "{filename=\"$filename\"}",
           "type": 1
         },
         "refresh": 1,
@@ -159,7 +165,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "ERROR",
             "INFO"
@@ -213,7 +219,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
