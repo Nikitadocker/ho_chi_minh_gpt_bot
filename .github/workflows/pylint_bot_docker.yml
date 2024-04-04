@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-      working-directory: ./telegram_bot
+      working-directory: ./comrade-chatgpt-bot-main/telegram_bot
 
     - name: Analysing the code with pylint
       run: |

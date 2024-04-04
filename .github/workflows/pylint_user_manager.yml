@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-      working-directory: ./user_manager
+      working-directory: ./comrade-chatgpt-bot-main/user_manager
 
     - name: Analysing the code with pylint
       run: |
