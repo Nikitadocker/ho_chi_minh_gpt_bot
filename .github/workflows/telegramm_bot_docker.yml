@@ -7,7 +7,7 @@ on:
       - reopened
       - synchronize
     paths:
-      - 'telegram_bot/**'
+      - 'comrade-chatgpt-bot-main/telegram_bot/**'
 
 jobs:
   build_and_push:
