@@ -19,7 +19,7 @@ jobs:
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
     - name: Build the Docker image
-      run: docker build . --tag zika13/comrade-chatgpt-bot:user_manager_${{ env.COMMIT_HASH }}
+      run: docker build . --tag paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
       working-directory: ./user_manager
 
     - name: Login to Docker Hub
@@ -29,4 +29,4 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Push the Docker image
-      run: docker push zika13/comrade-chatgpt-bot:user_manager_${{ env.COMMIT_HASH }}
+      run: docker push paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
