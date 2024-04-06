@@ -57,7 +57,7 @@ async def db_connect():
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
     logger.info("User %s (%s) started the bot.", user.id, user.username)
@@ -100,7 +100,7 @@ async def check_user_balance(user_id: int) -> (bool, float):
 
 
 async def help_command(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
+    update: Update, _: ContextTypes.DEFAULT_TYPE
 ) -> (
     None
 ):  # линтер ругается на неиспользуемый аргуементcontext но без него ломается handler
@@ -181,7 +181,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
 
 
-async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     user_message = update.message.text
     user = update.effective_user
 
@@ -236,4 +236,4 @@ if __name__ == "__main__":
     main()
 
 
-# anus3
+# anus2
