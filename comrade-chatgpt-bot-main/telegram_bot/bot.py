@@ -99,7 +99,7 @@ async def check_user_balance(user_id: int) -> (bool, float):
         await conn.close()
 
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:  # линтер ругается на неиспользуемый аргуементcontext но без него ломается handler
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Help!")
 
