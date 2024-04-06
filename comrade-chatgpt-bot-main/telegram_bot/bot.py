@@ -68,6 +68,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def is_user_allowed(user_id: int) -> bool:
+    """Check user allow"""
     conn = await db_connect()
     try:
         existing_user = await conn.fetchval(
