@@ -99,7 +99,11 @@ async def check_user_balance(user_id: int) -> (bool, float):
         await conn.close()
 
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:  # линтер ругается на неиспользуемый аргуементcontext но без него ломается handler
+async def help_command(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> (
+    None
+):  # линтер ругается на неиспользуемый аргуементcontext но без него ломается handler
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Help!")
 
@@ -111,11 +115,13 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     if not await is_user_allowed(user.id):
         logger.info(
-            f"User {user.id} ({user.username}) tried to generate an image but is not allowed."
+            "User %s (%s) tried to generate an image but is not allowed.",
+            user.id,
+            user.username,
         )
-        await update.message.reply_text(
-            "Sorry, you are not allowed to generate images."
-        )
+
+        await update.message.reply_text("Sorry, you are not allowed to generate images.",
+                                        reply_to_message_id=update.message.message_id)
         return
 
         # Check user's balance
