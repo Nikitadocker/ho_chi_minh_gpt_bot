@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-import asyncio
-import asyncpg
-import logging
 import os
+import logging
+import asyncpg
 import requests
 from openai import OpenAI
 from logfmter import Logfmter
