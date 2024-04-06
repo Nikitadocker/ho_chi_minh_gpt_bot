@@ -4,3 +4,6 @@ disable=missing-module-docstring,
         missing-function-docstring,
         missing-class-docstring,
         unused-argument
+
+[FORMAT]
+max-line-length=240
