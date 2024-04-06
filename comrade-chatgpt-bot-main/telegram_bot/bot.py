@@ -60,7 +60,7 @@ async def db_connect():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    logger.info(f"User {user.id} ({user.username}) started the bot.")
+    logger.info("User %s (%s) started the bot.", user.id, user.username)
     await update.message.reply_html(
         rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
