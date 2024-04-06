@@ -5,9 +5,6 @@ import asyncpg
 import requests
 from openai import OpenAI
 from logfmter import Logfmter
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", 0.10))  # Default price per image
 from telegram import ForceReply, Update
 from telegram.ext import (
     Application,
@@ -16,6 +13,9 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", 0.10))  # Default price per image
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
@@ -231,4 +231,4 @@ if __name__ == "__main__":
     main()
 
 
-#anus6
+# anus6
