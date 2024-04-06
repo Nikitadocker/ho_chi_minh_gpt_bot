@@ -106,7 +106,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 # This function will be used for generate image
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_message = update.message.text
+    # user_message = update.message.text
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
