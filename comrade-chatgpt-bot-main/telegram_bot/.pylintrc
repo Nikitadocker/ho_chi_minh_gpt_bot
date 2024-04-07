@@ -4,7 +4,8 @@ disable=missing-module-docstring,
         missing-function-docstring,
         missing-class-docstring,
         broad-exception-caught,
-        consider-using-with
+        consider-using-with,
+        invalid-envvar-default
 
 [FORMAT]
 max-line-length=240
