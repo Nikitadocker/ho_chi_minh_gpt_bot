@@ -151,9 +151,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
     logger.info("User %s (%s) requested to generate image", user.id, user.username)
-    
     try:
-        
         response_image = client.images.generate(
             model="dall-e-3",
             prompt=prompt,
