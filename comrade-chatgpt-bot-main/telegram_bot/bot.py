@@ -152,7 +152,8 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     logger.info("User %s (%s) requested to generate image", user.id, user.username)
 
     try:
-        "Generate image when the command /image is issued"
+        """Generate image when the command /image is issued"""
+        # This is comment which describes a particular part of the module.
         response_image = client.images.generate(
             model="dall-e-3",
             prompt=prompt,
