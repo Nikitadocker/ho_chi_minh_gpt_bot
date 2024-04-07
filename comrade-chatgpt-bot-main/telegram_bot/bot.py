@@ -182,9 +182,10 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await conn.close()
 
     except Exception as e:
-        logger.error(f"Error generating image for prompt: '{prompt}': {e}")
+        logger.error("Error generating image for prompt: '%s': %s", prompt, e)
         await update.message.reply_text(
-            "Sorry, there was an error generating your image."
+            "Sorry, there was an error generating your image.",
+            reply_to_message_id=update.message.message_id,
         )
 
 
