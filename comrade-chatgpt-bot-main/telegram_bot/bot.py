@@ -110,6 +110,7 @@ async def help_command(
 
 # This function will be used for generate image
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Generate image when the command /image is issued"""
     # user_message = update.message.text
     user = update.effective_user
 
@@ -150,10 +151,9 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
     logger.info("User %s (%s) requested to generate image", user.id, user.username)
-
+    
     try:
-        """Generate image when the command /image is issued"""
-        # This is comment which describes a particular part of the module.
+        
         response_image = client.images.generate(
             model="dall-e-3",
             prompt=prompt,
