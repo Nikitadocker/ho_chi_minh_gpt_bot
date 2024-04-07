@@ -2,7 +2,8 @@
 
 disable=missing-module-docstring,
         missing-function-docstring,
-        missing-class-docstring
+        missing-class-docstring,
+        broad-exception-caught
 
 [FORMAT]
 max-line-length=240
