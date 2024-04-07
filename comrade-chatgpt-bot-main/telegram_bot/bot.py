@@ -149,7 +149,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     prompt = " ".join(
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
-    logger.info ("User %s (%s) requested to generate image",user.id,user.username)
+    logger.info("User %s (%s) requested to generate image", user.id, user.username)
 
     try:
         """Generate image when the command /image is issued"""
@@ -173,7 +173,11 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 IMAGE_PRICE,
                 user.id,
             )
-            logger.info("Image generated for user %s. Balance deducted by %s.", user.id, IMAGE_PRICE)
+            logger.info(
+                "Image generated for user %s. Balance deducted by %s.",
+                user.id,
+                IMAGE_PRICE,
+            )
         finally:
             await conn.close()
 
@@ -190,9 +194,14 @@ async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     if not await is_user_allowed(user.id):
         logger.info(
-            f"User {user.id} ({user.username}) tried to use GPT prompt but is not allowed."
+            "User %s (%s) tried to use GPT prompt but is not allowed.",
+            user.id,
+            user.username,
         )
-        await update.message.reply_text("Sorry, you are not allowed to text with me.")
+        await update.message.reply_text(
+            "Sorry, you are not allowed to text with me.",
+            reply_to_message_id=update.message.message_id,
+        )
         return
 
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
