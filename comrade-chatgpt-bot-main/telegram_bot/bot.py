@@ -120,8 +120,10 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             user.username,
         )
 
-        await update.message.reply_text("Sorry, you are not allowed to generate images.",
-                                        reply_to_message_id=update.message.message_id)
+        await update.message.reply_text(
+            "Sorry, you are not allowed to generate images.",
+            reply_to_message_id=update.message.message_id,
+        )
         return
 
         # Check user's balance
@@ -134,10 +136,13 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     if not context.args:
         logger.error(
-            f"User {user.id} ({user.username}) did not provide a prompt for the /image command."
+            "User %s (%s) did not provide a prompt for the /image command.",
+            user.id,
+            user.username,
         )
         await update.message.reply_text(
-            "Please provide a description for the image after the /image command."
+            "Please provide a description after the /image command.",
+            reply_to_message_id=update.message.message_id,
         )
         return
 
