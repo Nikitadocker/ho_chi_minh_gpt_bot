@@ -28,3 +28,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint ./comrade-chatgpt-bot-main/user_manager
+      working-directory: ./comrade-chatgpt-bot-main
