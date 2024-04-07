@@ -173,9 +173,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 IMAGE_PRICE,
                 user.id,
             )
-            logger.info(
-                f"Image generated for user {user.id}. Balance deducted by {IMAGE_PRICE}."
-            )
+            logger.info("Image generated for user %s. Balance deducted by %s.", user.id, IMAGE_PRICE)
         finally:
             await conn.close()
 
