@@ -149,7 +149,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     prompt = " ".join(
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
-    logger.info(f"User {user.id} ({user.username}) requested to generate image")
+    logger.info ("User %s (%s) requested to generate image",user.id,user.username)
 
     try:
         """Generate image when the command /image is issued"""
