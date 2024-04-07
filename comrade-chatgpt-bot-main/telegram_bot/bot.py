@@ -222,9 +222,10 @@ async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         ai_response = response.choices[0].message.content
         await update.message.reply_text(ai_response.strip())
     except Exception as e:
-        logger.error(f"Error generating AI response: {e}")
+        logger.error("Error generating AI response: %s", e)
         await update.message.reply_text(
-            "Sorry, I couldn't process your message at the moment."
+            "Sorry, I couldn't process your message at the moment.",
+            reply_to_message_id=update.message.message_id,
         )
 
 
