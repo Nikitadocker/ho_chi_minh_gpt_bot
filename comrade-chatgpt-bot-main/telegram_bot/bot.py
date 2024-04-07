@@ -207,7 +207,7 @@ async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
     logger.info(
-        f"User {user.id} ({user.username}) requested sent text: '{user_message}'"
+        "User %s (%s) requested sent text: '%s'", user.id, user.username, user_message
     )
 
     try:
