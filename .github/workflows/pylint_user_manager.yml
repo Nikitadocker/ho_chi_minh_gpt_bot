@@ -27,5 +27,5 @@ jobs:
 
     - name: Analysing the code with pylint
       run: |
-        pylint ./user_manager
+        pylint  --rcfile=./user_manager/.pylintrc ./user_manager
       working-directory: ./comrade-chatgpt-bot-main
