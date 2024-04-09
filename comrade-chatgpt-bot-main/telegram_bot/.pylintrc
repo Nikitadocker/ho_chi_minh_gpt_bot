@@ -8,4 +8,4 @@ disable=missing-module-docstring,
         invalid-envvar-default
 
 [FORMAT]
-max-line-length=240
+max-line-length=140
