@@ -15,7 +15,7 @@ from telegram.ext import (
 )
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", 0.10))  # Default price per image
+IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
