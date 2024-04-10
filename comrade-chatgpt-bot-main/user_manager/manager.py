@@ -92,6 +92,9 @@ def allow_user():
 
 @app.route("/disable", methods=["POST"])
 def disable_user():
+    """
+    Revokes a user's access to the system.
+    """
     user_id = request.form.get("user_id")
     conn = get_db_connection()
     cur = conn.cursor()
