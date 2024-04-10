@@ -36,6 +36,10 @@ logger = logging.getLogger(__name__)
 
 
 def get_db_connection():
+    """
+    Connects to the database using the credentials from environment variables.
+    Returns the connection object.
+    """
     conn = psycopg2.connect(
         host=os.getenv("DB_HOST"),
         database=os.getenv("POSTGRES_DB"),
@@ -47,6 +51,9 @@ def get_db_connection():
 
 @app.route("/")  # опряделяем маршрут для фунцкции def index
 def index():
+    """
+    Renders the index page with allowed users and their balances.
+    """
     conn = get_db_connection()
     cur = conn.cursor()  # сusrsor позволяет выполнять код python ,в postgres в сенсе бд
     cur.execute("SELECT user_id FROM allowed_users ORDER BY user_id")
