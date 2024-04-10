@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+"""
+This application contains a Telegram bot that uses OpenAI's GPT model to generate responses and images.
+"""
 import os
 import logging
 import asyncpg
