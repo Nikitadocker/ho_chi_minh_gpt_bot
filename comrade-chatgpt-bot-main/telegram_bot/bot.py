@@ -196,6 +196,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 
 async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    """Generate a response to the user's text message using GPT."""
     user_message = update.message.text
     user = update.effective_user
 
