@@ -69,6 +69,9 @@ def index():
 
 @app.route("/allow", methods=["POST"])
 def allow_user():
+    """
+    Allows a user to access the system.
+    """
     user_id = request.form.get("user_id")
     conn = get_db_connection()
     cur = conn.cursor()
@@ -109,6 +112,9 @@ def disable_user():
 
 @app.route("/add_balance", methods=["POST"])
 def add_users_balance():
+    """
+    Adds balance to a user's account.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
     user_id = request.form.get("user_id")
