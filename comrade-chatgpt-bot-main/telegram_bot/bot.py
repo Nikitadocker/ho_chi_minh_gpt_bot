@@ -49,6 +49,10 @@ logger = logging.getLogger(__name__)
 
 
 async def db_connect():
+    """
+    Connects to the database using the credentials from environment variables.
+    Returns the connection object.
+    """
     return await asyncpg.connect(
         user=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
