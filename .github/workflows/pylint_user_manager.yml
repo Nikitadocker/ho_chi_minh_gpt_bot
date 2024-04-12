@@ -29,4 +29,3 @@ jobs:
       run: |
         pylint  --rcfile=./user_manager/.pylintrc ./user_manager
       working-directory: ./comrade-chatgpt-bot-main
-      
