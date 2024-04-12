@@ -1,14 +1,12 @@
-#!/usr/bin/env python
-import asyncio
-import asyncpg
-import logging
+"""
+This application contains a Telegram bot that uses OpenAI's GPT model to generate responses and images.
+"""
 import os
+import logging
+import asyncpg
 import requests
 from openai import OpenAI
 from logfmter import Logfmter
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", 0.10))  # Default price per image
 from telegram import ForceReply, Update
 from telegram.ext import (
     Application,
@@ -17,6 +15,9 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
@@ -48,6 +49,10 @@ logger = logging.getLogger(__name__)
 
 
 async def db_connect():
+    """
+    Connects to the database using the credentials from environment variables.
+    Returns the connection object.
+    """
     return await asyncpg.connect(
         user=os.getenv("POSTGRES_USER"),
         password=os.getenv("POSTGRES_PASSWORD"),
@@ -58,10 +63,10 @@ async def db_connect():
 
 # Define a few command handlers. These usually take the two arguments update and
 # context.
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def start(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Send a message when the command /start is issued."""
     user = update.effective_user
-    logger.info(f"User {user.id} ({user.username}) started the bot.")
+    logger.info("User %s (%s) started the bot.", user.id, user.username)
     await update.message.reply_html(
         rf"Hi {user.mention_html()}!",
         reply_markup=ForceReply(selective=True),
@@ -69,6 +74,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def is_user_allowed(user_id: int) -> bool:
+    """Check user allow"""
     conn = await db_connect()
     try:
         existing_user = await conn.fetchval(
@@ -99,22 +105,31 @@ async def check_user_balance(user_id: int) -> (bool, float):
         await conn.close()
 
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def help_command(
+    update: Update, _: ContextTypes.DEFAULT_TYPE
+) -> (
+    None
+):  # линтер ругается на неиспользуемый аргуементcontext но без него ломается handler
     """Send a message when the command /help is issued."""
     await update.message.reply_text("Help!")
 
 
 # This function will be used for generate image
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_message = update.message.text
+    """Generate image when the command /image is issued"""
+    # user_message = update.message.text
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
         logger.info(
-            f"User {user.id} ({user.username}) tried to generate an image but is not allowed."
+            "User %s (%s) tried to generate an image but is not allowed.",
+            user.id,
+            user.username,
         )
+
         await update.message.reply_text(
-            "Sorry, you are not allowed to generate images."
+            "Sorry, you are not allowed to generate images.",
+            reply_to_message_id=update.message.message_id,
         )
         return
 
@@ -128,20 +143,21 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     if not context.args:
         logger.error(
-            f"User {user.id} ({user.username}) did not provide a prompt for the /image command."
+            "User %s (%s) did not provide a prompt for the /image command.",
+            user.id,
+            user.username,
         )
         await update.message.reply_text(
-            "Please provide a description for the image after the /image command."
+            "Please provide a description after the /image command.",
+            reply_to_message_id=update.message.message_id,
         )
         return
 
     prompt = " ".join(
         context.args
     )  # принимать в качестве promзt аргументы отпользователя
-    logger.info(f"User {user.id} ({user.username}) requested to generate image")
-
+    logger.info("User %s (%s) requested to generate image", user.id, user.username)
     try:
-        """Generate image when the command /image is issued"""
         response_image = client.images.generate(
             model="dall-e-3",
             prompt=prompt,
@@ -150,10 +166,11 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             n=1,
         )
         image_url = response_image.data[0].url
-        responce_url = requests.get(image_url)
+        responce_url = requests.get(image_url, timeout=100)
         with open("./images/image.png", "wb") as f:
             f.write(responce_url.content)
-        await update.message.reply_photo(open("./images/image.png", "rb"))
+        with open ("./images/image.png", "rb") as f:
+            await update.message.reply_photo(f)
 
         conn = await db_connect()
         try:
@@ -163,35 +180,42 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 user.id,
             )
             logger.info(
-                f"Image generated for user {user.id}. Balance deducted by {IMAGE_PRICE}."
+                "Image generated for user %s. Balance deducted by %s.",
+                user.id,
+                IMAGE_PRICE,
             )
         finally:
             await conn.close()
 
     except Exception as e:
-        logger.error(f"Error generating image for prompt: '{prompt}': {e}")
+        logger.error("Error generating image for prompt: '%s': %s", prompt, e)
         await update.message.reply_text(
-            "Sorry, there was an error generating your image."
+            "Sorry, there was an error generating your image.",
+            reply_to_message_id=update.message.message_id,
         )
 
-    # 2024-02-28T11:48:14.892862627Z ChatCompletion(id='chatcmpl-8xChybGg2uRWPk0hagGRIdHvjoaAX', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='Hello! How can I assist you today?', role='assistant', function_call=None, tool_calls=None))], created=1709120894, model='gpt-3.5-turbo-0125', object='chat.completion', system_fingerprint='fp_86156a94a0', usage=CompletionUsage(completion_tokens=9, prompt_tokens=18, total_tokens=27))
 
-
-async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    """Generate a response to the user's text message using GPT."""
     user_message = update.message.text
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
         logger.info(
-            f"User {user.id} ({user.username}) tried to use GPT prompt but is not allowed."
+            "User %s (%s) tried to use GPT prompt but is not allowed.",
+            user.id,
+            user.username,
         )
-        await update.message.reply_text("Sorry, you are not allowed to text with me.")
+        await update.message.reply_text(
+            "Sorry, you are not allowed to text with me.",
+            reply_to_message_id=update.message.message_id,
+        )
         return
 
     # logger.info("Пользователь написал сообщение {0}".format(user_message))
 
     logger.info(
-        f"User {user.id} ({user.username}) requested sent text: '{user_message}'"
+        "User %s (%s) requested sent text: '%s'", user.id, user.username, user_message
     )
 
     try:
@@ -206,9 +230,10 @@ async def gpt_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         ai_response = response.choices[0].message.content
         await update.message.reply_text(ai_response.strip())
     except Exception as e:
-        logger.error(f"Error generating AI response: {e}")
+        logger.error("Error generating AI response: %s", e)
         await update.message.reply_text(
-            "Sorry, I couldn't process your message at the moment."
+            "Sorry, I couldn't process your message at the moment.",
+            reply_to_message_id=update.message.message_id,
         )
 
 
@@ -230,3 +255,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# anus7
