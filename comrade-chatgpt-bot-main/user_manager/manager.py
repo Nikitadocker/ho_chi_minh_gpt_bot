@@ -11,6 +11,7 @@ from logfmter import Logfmter
 app = Flask(__name__, template_folder="templates")
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
+log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
@@ -25,11 +26,19 @@ formatter = Logfmter(
 )
 
 
+
+
 handler_stdout = logging.StreamHandler()
 handler_file = logging.FileHandler("./logs/logfmter_user_management.log")
-handler_stdout.setFormatter(formatter)
-handler_file.setFormatter(formatter)
-logging.basicConfig(handlers=[handler_stdout, handler_file], level=logging.INFO)
+
+enabled_handlers = [handler_stdout]
+
+if log_to_file:
+    handler_stdout.setFormatter(formatter)
+    handler_file.setFormatter(formatter)
+
+
+logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 
 
 logger = logging.getLogger(__name__)
