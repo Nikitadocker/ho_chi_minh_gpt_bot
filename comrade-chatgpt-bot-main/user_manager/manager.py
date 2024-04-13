@@ -29,12 +29,13 @@ formatter = Logfmter(
 
 
 handler_stdout = logging.StreamHandler()
-handler_file = logging.FileHandler("./logs/logfmter_user_management.log")
+handler_stdout.setFormatter(formatter)
+
 
 enabled_handlers = [handler_stdout]
 
 if log_to_file:
-    handler_stdout.setFormatter(formatter)
+    handler_file = logging.FileHandler("./logs/logfmter_user_management.log")
     handler_file.setFormatter(formatter)
     enabled_handlers.append(handler_file)
 

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: user-manager
-          image: paramas/comrade_ho_chi_minh:user_manager_788e27a
+          image: paramas/comrade_ho_chi_minh:user_manager_405c58c
           ports:
             - containerPort: 5000
           env:

@@ -15,10 +15,10 @@ spec:
     spec:
       initContainers:
         - name: liquibase
-          image: paramas/comrade_ho_chi_minh:telegram_bot_788e27a
+          image: paramas/comrade_ho_chi_minh:telegram_bot_405c58c
           args: [
             "--changeLogFile=initial.postgres.yaml",
-            "--url=jdbc:postgresql://postgres:5432/bot",
+            "--url=jdbc:postgresql://postgres:5432/bot_base",
             "update"
           ]
           env:
@@ -45,7 +45,7 @@ spec:
 
       containers:
         - name: telegram-bot
-          image: paramas/comrade_ho_chi_minh:telegram_bot_788e27a
+          image: paramas/comrade_ho_chi_minh:telegram_bot_405c58c
           env:
             - name: POSTGRES_USER
               valueFrom:
