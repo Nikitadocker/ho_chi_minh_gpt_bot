@@ -46,7 +46,7 @@ enabled_handlers = [handler_stdout]
 if log_to_file:
     handler_file = logging.FileHandler("./logs/logfmter_bot.log")
     handler_file.setFormatter(formatter)
-    
+    enabled_handlers.append(handler_file)
     
 logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 

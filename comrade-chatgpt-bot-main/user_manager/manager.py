@@ -36,6 +36,7 @@ enabled_handlers = [handler_stdout]
 if log_to_file:
     handler_stdout.setFormatter(formatter)
     handler_file.setFormatter(formatter)
+    enabled_handlers.append(handler_file)
 
 
 logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
