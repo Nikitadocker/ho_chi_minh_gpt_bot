@@ -1,0 +1,18 @@
+name: User Manager Kubernetes
+
+on:
+  pull_request:
+
+    - name: Push the Docker image
+      run: docker push  paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
+
+    - uses: azure/setup-kubectl@v3
+
+    - name: Configure kubectl
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
+        mkdir -p ~/.kube
+        mv kubeconfig ~/.kube/config
+    - name: kubectl set image
+      run: |
+        kubectl --namespace comrade-chatgpt-bot set image deployment/user-manager user-manager=paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}

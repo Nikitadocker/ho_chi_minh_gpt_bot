@@ -38,3 +38,15 @@ jobs:
 
     - name: Push the liquibase docker image
       run: docker push paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
+
+    - uses: azure/setup-kubectl@v3
+
+    - name: Configure kubectl
+      run: |
+        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
+        mkdir -p ~/.kube
+        mv kubeconfig ~/.kube/config
+
+    - name: kubectl set image
+      run: |
+        kubectl --namespace comrade-chatgpt-bot set image deployment/telegram-bot telegram-bot=paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }} liquibase=paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
