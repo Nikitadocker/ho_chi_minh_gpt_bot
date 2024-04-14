@@ -24,7 +24,7 @@ jobs:
       working-directory: ./comrade-chatgpt-bot-main/telegram_bot
     
     - name: Build liquibase docker image
-      run: docker build . --tag paramas/comrade_ho_chi_minh:telegram_bot:liquibase_${{ env.COMMIT_HASH }}
+      run: docker build . --tag paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
       working-directory: ./comrade-chatgpt-bot-main/liquibase
 
     - name: Login to Docker Hub
@@ -37,4 +37,4 @@ jobs:
       run: docker push paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }}
 
     - name: Push the liquibase docker image
-      run: docker push paramas/comrade_ho_chi_minh:telegram_bot:liquibase_${{ env.COMMIT_HASH }}
+      run: docker push paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
