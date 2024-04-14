@@ -49,4 +49,4 @@ jobs:
 
     - name: kubectl set image
       run: |
-        kubectl --namespace comrade-chatgpt-bot set image deployment/telegram-bot telegram-bot=paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }} liquibase=paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
+        kubectl --namespace comrade-ho-chi-minh set image deployment/telegram-bot telegram-bot=paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }} liquibase=paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}

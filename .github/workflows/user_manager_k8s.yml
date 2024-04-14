@@ -40,4 +40,4 @@ jobs:
         mv kubeconfig ~/.kube/config
     - name: kubectl set image
       run: |
-        kubectl --namespace comrade-chatgpt-bot set image deployment/user-manager user-manager=paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
+        kubectl --namespace comrade-ho-chi-minh set image deployment/user-manager user-manager=paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
