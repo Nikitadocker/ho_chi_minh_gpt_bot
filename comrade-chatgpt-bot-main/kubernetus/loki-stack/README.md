@@ -1,0 +1,1 @@
+helm  upgrade --install --namespace loki-stack-comrade-ho-chi-minh  loki-stack grafana/loki-stack --version 2.10.2 -f values.yaml
