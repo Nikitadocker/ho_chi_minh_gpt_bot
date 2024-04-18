@@ -66,3 +66,9 @@ promtail:
             {{- with .Values.config.snippets.extraRelabelConfigs }}
             {{- toYaml . | nindent 4 }}
             {{- end }}
+
+
+
+  file:
+    positions:
+      filename: /run/promtail/positions_ho_chi_minh.yaml
