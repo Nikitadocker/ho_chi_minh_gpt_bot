@@ -69,6 +69,10 @@ promtail:
 
 
 
-  file:
+ 
     positions:
-      filename: /run/promtail/positions_ho_chi_minh.yaml
+        filename: /run/promtail/positions_ho_chi_minh.yaml
+
+
+
+
