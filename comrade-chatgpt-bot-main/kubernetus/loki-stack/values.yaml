@@ -3,7 +3,7 @@ grafana:
   persistence:
     type: pvc
     enabled: true
-    storageClassName: microk8s-hostpath
+    storageClassName: do-block-storage
     accessModes:
       - ReadWriteOnce
     size: 1Gi
