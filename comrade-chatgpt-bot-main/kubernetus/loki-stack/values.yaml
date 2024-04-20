@@ -72,7 +72,3 @@ promtail:
  
     positions:
         filename: /run/promtail/positions_ho_chi_minh.yaml
-
-
-
-
