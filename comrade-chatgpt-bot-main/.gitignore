@@ -2,3 +2,4 @@
 telegram_bot/.env
 grafana/.env
 .env
+kubernetus/app-secrets_example.yaml

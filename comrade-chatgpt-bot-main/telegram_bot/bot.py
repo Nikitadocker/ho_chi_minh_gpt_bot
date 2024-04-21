@@ -19,6 +19,8 @@ from telegram.ext import (
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
+log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
+
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
     mapping={
@@ -31,11 +33,22 @@ formatter = Logfmter(
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
 
+
+
+
+
 handler_stdout = logging.StreamHandler()
-handler_file = logging.FileHandler("./logs/logfmter_bot.log")
 handler_stdout.setFormatter(formatter)
-handler_file.setFormatter(formatter)
-logging.basicConfig(handlers=[handler_stdout, handler_file], level=logging.INFO)
+
+enabled_handlers = [handler_stdout]
+
+
+if log_to_file:
+    handler_file = logging.FileHandler("./logs/logfmter_bot.log")
+    handler_file.setFormatter(formatter)
+    enabled_handlers.append(handler_file)
+    
+logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 
 
 # set higher logging level for httpx to avoid all GET and POST requests being logged
