@@ -57,7 +57,3 @@ spec:
                 secretKeyRef:
                   name: app-secrets
                   key: FLASK_SECRET_KEY
-            - name: MY_POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP

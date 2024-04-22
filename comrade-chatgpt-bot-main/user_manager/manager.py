@@ -3,15 +3,13 @@ This application contains a Telegram bot that uses OpenAI's GPT model to generat
 """
 import os
 import logging
-from threading import Thread
 from decimal import Decimal
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash
 import psycopg2
 from logfmter import Logfmter
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-app.config['SERVER_NAME'] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
 log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
 
@@ -78,6 +76,24 @@ def index():
     return render_template(
         "index.html", allowed_users=allowed_users, users_balance=users_balance
     )  # список пользователей будем динамическими данными
+    
+    
+@app.route('/health')
+def health():
+    """
+    Health check endpoint.
+    """
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT 1")
+        cur.fetchone()
+        return "OK", 200
+    except psycopg2.Error as e:
+        return f"Error: {str(e)}", 500
+    finally:
+        cur.close()
+        conn.close()
 
 
 @app.route("/allow", methods=["POST"])
