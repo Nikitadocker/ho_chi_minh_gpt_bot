@@ -76,8 +76,7 @@ def index():
     return render_template(
         "index.html", allowed_users=allowed_users, users_balance=users_balance
     )  # список пользователей будем динамическими данными
-    
-    
+
 @app.route('/health')
 def health():
     """
