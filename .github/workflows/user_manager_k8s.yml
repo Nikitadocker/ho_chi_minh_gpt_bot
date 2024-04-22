@@ -38,6 +38,12 @@ jobs:
         echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
         mkdir -p ~/.kube
         mv kubeconfig ~/.kube/config
+
+    - name: install-doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+        
     - name: kubectl set image
       run: |
         kubectl --namespace comrade-ho-chi-minh set image deployment/user-manager user-manager=paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
