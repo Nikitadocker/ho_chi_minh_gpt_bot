@@ -21,7 +21,7 @@ spec:
               name: healthcheck
           readinessProbe:
             httpGet:
-              path: /healthcheck
+              path: /health
               port: healthcheck
               scheme: HTTP
             initialDelaySeconds: 5
