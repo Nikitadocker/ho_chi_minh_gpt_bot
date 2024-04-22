@@ -269,7 +269,7 @@ async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are comrade ho chi minh"},
                 {"role": "user", "content": user_message},

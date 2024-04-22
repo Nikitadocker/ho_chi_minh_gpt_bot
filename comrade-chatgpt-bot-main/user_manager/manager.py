@@ -3,13 +3,15 @@ This application contains a Telegram bot that uses OpenAI's GPT model to generat
 """
 import os
 import logging
+from threading import Thread
 from decimal import Decimal
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import psycopg2
 from logfmter import Logfmter
 
 app = Flask(__name__, template_folder="templates")
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
+app.config['SERVER_NAME'] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
 log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
 
