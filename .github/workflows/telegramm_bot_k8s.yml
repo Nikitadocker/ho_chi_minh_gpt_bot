@@ -47,6 +47,11 @@ jobs:
         mkdir -p ~/.kube
         mv kubeconfig ~/.kube/config
 
+    - name: install-doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
     - name: kubectl set image
       run: |
         kubectl --namespace comrade-ho-chi-minh set image deployment/telegram-bot telegram-bot=paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }} liquibase=paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
