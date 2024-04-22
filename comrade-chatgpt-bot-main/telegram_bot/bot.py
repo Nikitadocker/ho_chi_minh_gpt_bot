@@ -311,6 +311,3 @@ if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
     main()
-
-
-# anus9
