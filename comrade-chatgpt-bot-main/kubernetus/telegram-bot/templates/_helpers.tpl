@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "telegramm-bot.name" -}}
+{{- define "telegram-bot.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "telegramm-bot.fullname" -}}
+{{- define "telegram-bot.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "telegramm-bot.chart" -}}
+{{- define "telegram-bot.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "telegramm-bot.labels" -}}
-helm.sh/chart: {{ include "telegramm-bot.chart" . }}
-{{ include "telegramm-bot.selectorLabels" . }}
+{{- define "telegram-bot.labels" -}}
+helm.sh/chart: {{ include "telegram-bot.chart" . }}
+{{ include "telegram-bot.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "telegramm-bot.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "telegramm-bot.name" . }}
+{{- define "telegram-bot.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "telegram-bot.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "telegramm-bot.serviceAccountName" -}}
+{{- define "telegram-bot.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "telegramm-bot.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "telegram-bot.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
