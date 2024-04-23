@@ -8,7 +8,7 @@ image:
   repository: paramas/comrade_ho_chi_minh
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "752732f"
+  tag: "e8dfe57"
 
 secret:
   name: app-secrets

@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: liquibase
-          image: {{ .Values.image.repository }}:telegram_bot_liquibase_{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.image.repository }}:telegram_bot_liquibase_{{ .Values.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args: [
             "--changeLogFile=initial.postgres.yaml",
@@ -47,7 +47,7 @@ spec:
 
       containers:
         - name: telegram-bot
-          image: {{ .Values.image.repository }}:telegram_bot_{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: {{ .Values.image.repository }}:telegram_bot_{{ .Values.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 5000
