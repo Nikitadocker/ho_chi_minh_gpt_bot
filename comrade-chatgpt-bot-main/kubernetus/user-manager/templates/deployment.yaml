@@ -2,67 +2,60 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "user-manager.fullname" . }}
-  labels:
+  labels: 
     {{- include "user-manager.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "user-manager.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "user-manager.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
+        {{- include "user-manager.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "user-manager.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        - name: user-manager
+          image:  {{ .Values.image.repository }}:user_manager_{{ .Values.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-          livenessProbe:
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
+            - containerPort: 5000
+              name: healthcheck
           readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+            httpGet:
+              path: /health
+              port: healthcheck
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 1
+          env:
+            - name: FLASK_APP
+              value: manager.py
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: POSTGRES_DB
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: DB_HOST
+            - name: FLASK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: FLASK_SECRET_KEY
