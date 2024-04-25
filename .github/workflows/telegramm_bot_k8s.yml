@@ -52,6 +52,7 @@ jobs:
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-    - name: kubectl set image
+    - name: helm upgrade --install
       run: |
-        kubectl --namespace comrade-ho-chi-minh set image deployment/telegram-bot telegram-bot=paramas/comrade_ho_chi_minh:telegram_bot_${{ env.COMMIT_HASH }} liquibase=paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
+        helm upgrade --install  --namespace comrade-ho-chi-minh telegramm-bot --set image.tag=${{ env.COMMIT_HASH }} ./telegram-bot      
+      working-directory: ./comrade-chatgpt-bot-main/helm

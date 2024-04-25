@@ -1,1 +1,0 @@
-helm upgrade --install  --namespace comrade-ho-chi-minh user-manager ./user-manager -f ./user-manager/values.yaml

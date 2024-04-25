@@ -1,1 +1,0 @@
-helm install telegramm-bot ./telegram-bot -f values.yaml
