@@ -77,6 +77,23 @@ def index():
         "index.html", allowed_users=allowed_users, users_balance=users_balance
     )  # список пользователей будем динамическими данными
 
+@app.route('/health')
+def health():
+    """
+    Health check endpoint.
+    """
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("SELECT 1")
+        cur.fetchone()
+        return "OK", 200
+    except psycopg2.Error as e:
+        return f"Error: {str(e)}", 500
+    finally:
+        cur.close()
+        conn.close()
+
 
 @app.route("/allow", methods=["POST"])
 def allow_user():
@@ -144,7 +161,6 @@ def add_users_balance():
     cur.close()
     conn.close()
     return redirect(url_for("index"))
-
 
 if __name__ == "__main__":
     app.run(debug=True)

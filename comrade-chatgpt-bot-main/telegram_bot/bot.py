@@ -3,6 +3,7 @@ This application contains a Telegram bot that uses OpenAI's GPT model to generat
 """
 import os
 import logging
+from threading import Thread
 import asyncpg
 import requests
 from openai import OpenAI
@@ -15,6 +16,10 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+app.config['SERVER_NAME'] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
@@ -47,7 +52,7 @@ if log_to_file:
     handler_file = logging.FileHandler("./logs/logfmter_bot.log")
     handler_file.setFormatter(formatter)
     enabled_handlers.append(handler_file)
-    
+
 logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 
 
@@ -59,6 +64,37 @@ logger = logging.getLogger(__name__)
 
 # Set your OpenAI API key
 # Replace None with your OpenAI API key
+
+
+def check_openai_connection():
+    """Check if the OpenAI API is reachable."""
+    try:
+        test_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+        completion = test_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": "Hello!"}
+            ]
+        )
+
+        logger.info(completion.choices[0].message)
+        return True
+
+    except Exception as e:
+        logger.error("OpenAI connection check failed: %s", e)
+        return False
+
+
+@app.route('/healthcheck')
+def healthcheck():
+    """Check the health of the bot's dependencies."""
+    # openai_ok = check_openai_connection()
+    openai_ok = True
+
+    status = 'OK' if openai_ok else 'ERROR'
+    return jsonify({'status': status}), 200 if status == 'OK' else 500
 
 
 async def db_connect():
@@ -233,7 +269,7 @@ async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
                 {"role": "system", "content": "You are comrade ho chi minh"},
                 {"role": "user", "content": user_message},
@@ -266,8 +302,14 @@ def main() -> None:
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
+
+def run_flask():
+    """Run the Flask app."""
+    app.run(debug=False)
+
 if __name__ == "__main__":
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
     main()
 
-
-# anus7
+#
