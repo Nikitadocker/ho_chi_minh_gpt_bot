@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "comrade-ho-chi-minh.online"
+  - host: "comrade-ho-chi-minh.space"
     http:
       paths:
       - pathType: Prefix
