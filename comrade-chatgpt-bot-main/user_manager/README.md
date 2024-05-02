@@ -7,3 +7,5 @@ kubectl create secret generic user-manager-auth-secret --from-file=auth --namesp
 
 
 um.comrade-ho-chi-minh.com
+
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.14.5 --set installCRDs=true
