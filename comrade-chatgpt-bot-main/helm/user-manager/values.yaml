@@ -8,7 +8,16 @@ image:
   repository: paramas/comrade_ho_chi_minh
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "62874bd"
 
 secret:
   name: app-secrets
+
+service:
+  ports:
+    - port: 5000
+      targetPort: healthcheck
+  type: ClusterIP
+
+
+
