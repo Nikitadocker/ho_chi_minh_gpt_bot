@@ -19,13 +19,13 @@ spec:
         path: "/"
         backend:
           service:
-            name: user-manager
+            name:  {{ .Values.ingress.service.name }}
             port:
-              number: 5000
+              number: {{ .Values.ingress.service.port.number }}
   tls:
   - hosts:
-    - comrade-ho-chi-minh.space
-    secretName: user-manager-nikita-tls
+    - {{ .Values.ingress.tls.hosts}}
+    secretName: {{ .Values.ingress.tls.secretName}}
 
 
 

@@ -21,22 +21,14 @@ service:
 
 ingress:
   ingressClassName: nginx
-  host: anus.space
-  #     http:
-  #       paths:
-  #         - pathType: Prefix
-  #           path: "/"
-  #           backend:
-  #             service:
-  #               name: user-manager
-  #               port:
-  #                 number: 5000
-
-  # tls:
-  #   hosts:
-  #     - comrade-ho-chi-minh.space
-  #   secretName: user-manager-nikita-tls
-    
+  host: comrade-ho-chi-minh.space
+  service:
+    name: user-manager
+    port:
+      number: 5000
+  tls:
+    hosts: comrade-ho-chi-minh.space
+    secretName: user-manager-nikita-tls
 
 
 
