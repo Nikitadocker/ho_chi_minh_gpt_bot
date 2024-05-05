@@ -5,10 +5,10 @@ metadata:
   labels: 
     {{- include "user-manager.labels" . | nindent 4 }}
   annotations:
-  nginx.ingress.kubernetes.io/auth-type: basic
-  nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
-  nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
-  cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: {{ .Values.ingress.ingressClassName }}
   rules:
