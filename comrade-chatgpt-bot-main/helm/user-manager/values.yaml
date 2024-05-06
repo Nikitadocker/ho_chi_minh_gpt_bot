@@ -12,3 +12,31 @@ image:
 
 secret:
   name: app-secrets
+
+service:
+  ports:
+    - port: 5000
+      targetPort: healthcheck
+  type: ClusterIP
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  ingressClassName: nginx
+  host: comrade-ho-chi-minh.space
+  service:
+    name: user-manager
+    port:
+      number: 5000
+  tls:
+    hosts: comrade-ho-chi-minh.space
+    secretName: user-manager-nikita-tls
+
+
+
+
+
+
