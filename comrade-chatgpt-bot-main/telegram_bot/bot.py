@@ -300,8 +300,8 @@ def main() -> None:
     # application.run_polling(allowed_updates=Update.ALL_TYPES)
 
     application.run_webhook(
-        listen="68.183.245.107",
-        port=443,
+        listen="0.0.0.0",
+        port=80,
         secret_token=os.getenv("TELEGRAM_BOT_TOKEN"),
         allowed_updates=Update.ALL_TYPES,
         webhook_url="https://webhook.comrade-ho-chi-minh.space/:443/",
