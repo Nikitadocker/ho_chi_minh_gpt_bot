@@ -304,7 +304,7 @@ def main() -> None:
         port=80,
         secret_token="7127283043:AAGZj9hR3JfT_zMNz7hcxbaRjLF1cG5kius",
         allowed_updates="",
-        webhook_url="https://webhook.comrade-ho-chi-minh.space/:80/",
+        webhook_url="https://webhook.comrade-ho-chi-minh.space/",
         
     )
 
