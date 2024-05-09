@@ -1,6 +1,7 @@
 """
 This application contains a Telegram bot that uses OpenAI's GPT model to generate responses and images.
 """
+
 import os
 import logging
 from threading import Thread
@@ -19,12 +20,12 @@ from telegram.ext import (
 from flask import Flask, jsonify
 
 app = Flask(__name__)
-app.config['SERVER_NAME'] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
+app.config["SERVER_NAME"] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
-log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
+log_to_file = os.getenv("LOG_TO_FILE", "False") == "True"
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
@@ -37,9 +38,6 @@ formatter = Logfmter(
     },
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
-
-
-
 
 
 handler_stdout = logging.StreamHandler()
@@ -75,8 +73,8 @@ def check_openai_connection():
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Hello!"}
-            ]
+                {"role": "user", "content": "Hello!"},
+            ],
         )
 
         logger.info(completion.choices[0].message)
@@ -87,14 +85,14 @@ def check_openai_connection():
         return False
 
 
-@app.route('/healthcheck')
+@app.route("/healthcheck")
 def healthcheck():
     """Check the health of the bot's dependencies."""
     # openai_ok = check_openai_connection()
     openai_ok = True
 
-    status = 'OK' if openai_ok else 'ERROR'
-    return jsonify({'status': status}), 200 if status == 'OK' else 500
+    status = "OK" if openai_ok else "ERROR"
+    return jsonify({"status": status}), 200 if status == "OK" else 500
 
 
 async def db_connect():
@@ -218,7 +216,7 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         responce_url = requests.get(image_url, timeout=100)
         with open("./images/image.png", "wb") as f:
             f.write(responce_url.content)
-        with open ("./images/image.png", "rb") as f:
+        with open("./images/image.png", "rb") as f:
             await update.message.reply_photo(f)
 
         conn = await db_connect()
@@ -299,13 +297,23 @@ def main() -> None:
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gpt_prompt))
 
     # Run the bot until the user presses Ctrl-C
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    # application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+    application.run_webhook(
+        listen="68.183.245.107",
+        port=443,
+        secret_token=os.getenv("TELEGRAM_BOT_TOKEN"),
+        allowed_updates=Update.ALL_TYPES,
+        webhook_url="https://webhook.comrade-ho-chi-minh.space/:443/",
+        
+    )
 
 
 
 def run_flask():
     """Run the Flask app."""
     app.run(debug=False)
+
 
 if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
