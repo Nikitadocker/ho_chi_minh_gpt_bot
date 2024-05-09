@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: user-manager-ingress
+  name: telegramm-bot-ingress
   namespace: comrade-ho-chi-minh
   annotations:
     # nginx.ingress.kubernetes.io/auth-type: basic
