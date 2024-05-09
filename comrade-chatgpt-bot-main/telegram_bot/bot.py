@@ -302,7 +302,7 @@ def main() -> None:
     application.run_webhook(
         listen="0.0.0.0",
         port=80,
-        secret_token=str(os.getenv("TELEGRAM_BOT_TOKEN")),
+        secret_token=7127283043:AAGZj9hR3JfT_zMNz7hcxbaRjLF1cG5kius,
         allowed_updates=Update.ALL_TYPES,
         webhook_url="https://webhook.comrade-ho-chi-minh.space/:443/",
         
