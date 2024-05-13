@@ -20,7 +20,7 @@ spec:
           service:
             name: telegram-service
             port:
-              number: 5000
+              number: 8080
   tls:
   - hosts:
     - webhook.comrade-ho-chi-minh.space
