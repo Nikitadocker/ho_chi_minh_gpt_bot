@@ -7,6 +7,6 @@ spec:
   selector:
     app.kubernetes.io/name: telegram-bot
   ports:
-    - port: 5000
-      targetPort: healthcheck
+    - port: 8080
+      targetPort: 80
   type: ClusterIP
