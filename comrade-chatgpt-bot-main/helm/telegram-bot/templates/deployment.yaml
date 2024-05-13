@@ -52,7 +52,7 @@ spec:
           ports:
             - containerPort: 5000
               name: healthcheck
-            - сontainerPort: 80
+            - containerPort: 80
               name: webhook
           readinessProbe:
             httpGet:
