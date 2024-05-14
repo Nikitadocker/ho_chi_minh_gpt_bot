@@ -13,3 +13,8 @@ helm upgrade --install  --namespace comrade-ho-chi-minh user-manager --set image
         helm upgrade --install  --namespace comrade-ho-chi-minh user-manager ./user-manager -f ./user-manager/values.yaml
 
         helm upgrade --install  --namespace comrade-ho-chi-minh user-manager ./user_manager/ -f ./user_manager/values.yaml
+
+
+
+
+        helm upgrade --install  --namespace comrade-ho-chi-minh telegramm-bot ./telegram-bot/ -f ./telegram-bot/values.yaml
