@@ -25,7 +25,7 @@ ingress:
   ingressClassName: nginx
   host: webhook.comrade-ho-chi-minh.space
   service:
-    name: telegram-service
+    name: telegramm-bot-telegram-bot
     port:
       number: 8080
   tls:
