@@ -12,3 +12,22 @@ image:
 
 secret:
   name: app-secrets
+
+service:
+  ports:
+    - port: 8080
+      targetPort: 80
+  type: ClusterIP
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  ingressClassName: nginx
+  host: webhook.comrade-ho-chi-minh.space
+  service:
+    name: telegramm-bot-telegram-bot
+    port:
+      number: 8080
+  tls:
+    hosts:  webhook.comrade-ho-chi-minh.space
+    secretName: telegram-bot-nikita-tls

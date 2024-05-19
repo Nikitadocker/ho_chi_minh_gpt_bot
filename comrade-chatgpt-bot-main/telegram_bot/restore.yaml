@@ -1,0 +1,46 @@
+apiVersion: batch/v1   # database restore job for comrade-ho-chi-minh-db
+kind: Job
+metadata:
+  name: pg-restore-job-db3
+  namespace: postgres
+spec:
+  template:
+    spec:
+      containers:
+      - name: pg-restore-container-db3
+        image: postgres:16.2
+        env:
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: POSTGRES_USER3
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: POSTGRES_PASSWORD3
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: POSTGRES_DB3
+        - name: DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_PORT
+        command: ["bash", "-c", "psql -h $DB_HOST -p $DB_PORT -U $PGUSER -d $POSTGRES_DB -f /mnt/$(ls -t /mnt/pg_dump_db3_*.sql | head -n 1)"]
+        volumeMounts:
+        - name: pg-backup-storage
+          mountPath: /mnt
+      restartPolicy: Never
+      volumes:
+      - name: pg-backup-storage
+        persistentVolumeClaim:
+          claimName: postgres-backup

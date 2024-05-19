@@ -12,4 +12,4 @@ spec:
       targetPort: {{ .Values.service.targetPort | default "healthcheck" }}
   type: {{ .Values.service.type  | default "ClusterIP" }} 
 
-
+#
