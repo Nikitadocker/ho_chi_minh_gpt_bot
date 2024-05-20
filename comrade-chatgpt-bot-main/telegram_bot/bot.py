@@ -302,7 +302,7 @@ def main() -> None:
     application.run_webhook(
         listen="0.0.0.0",
         port=80,
-        secret_token=os.getenv("SECRET_TOKEN_FORWEBHOOK"),
+        secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
         allowed_updates=Update.ALL_TYPES,
         webhook_url="https://webhook.comrade-ho-chi-minh.space/",
         
