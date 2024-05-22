@@ -67,10 +67,6 @@ spec:
           volumeMounts:
           - name: images-volume
             mountPath: /images
-      volumes:
-      - name: cache-volume
-        emptyDir:
-        sizeLimit: 100Mi
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -111,3 +107,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+      volumes:
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 100Mi
