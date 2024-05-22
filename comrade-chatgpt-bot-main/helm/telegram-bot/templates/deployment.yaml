@@ -108,6 +108,6 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
       volumes:
-      - name: cache-volume
+      - name: images-volume
         emptyDir:
           sizeLimit: 100Mi
