@@ -214,9 +214,9 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
         image_url = response_image.data[0].url
         responce_url = requests.get(image_url, timeout=100)
-        with open("./images/image.png", "wb") as f:
+        with open("/images/image.png", "wb") as f:
             f.write(responce_url.content)
-        with open("./images/image.png", "rb") as f:
+        with open("/images/image.png", "rb") as f:
             await update.message.reply_photo(f)
 
         conn = await db_connect()
