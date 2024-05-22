@@ -26,7 +26,9 @@ services:
     build:
       context: ./telegram_bot
     command: python3 test-bot.py
-    TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    environment:
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+
 
   # http://loki-local:3100
   loki-local:
