@@ -64,6 +64,13 @@ spec:
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 1
+          volumeMounts:
+          - name: images-volume
+            mountPath: /images
+      volumes:
+      - name: cache-volume
+        emptyDir:
+        sizeLimit: 100Mi
           env:
             - name: POSTGRES_USER
               valueFrom:
