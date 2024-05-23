@@ -17,7 +17,6 @@ class TestOenAIconnect(unittest.TestCase):  # предоставляем кла�
         ]
         )
 
-        # print(completion.choices[0].message)
         
 
         self.assertTrue(completion.choices[0].message, "OpenAI connection  work")
