@@ -15,5 +15,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code into the container
 COPY .. /app/
 
+RUN mkdir /images
 # Run the application
 CMD ["python", "bot.py"]

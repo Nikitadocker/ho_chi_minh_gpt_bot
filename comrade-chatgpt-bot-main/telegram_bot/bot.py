@@ -22,7 +22,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 app.config["SERVER_NAME"] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
 log_to_file = os.getenv("LOG_TO_FILE", "False") == "True"
@@ -165,6 +165,8 @@ async def help_command(
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Generate image when the command /image is issued"""
     # user_message = update.message.text
+    logger.info(update)
+    
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
@@ -298,16 +300,20 @@ def main() -> None:
 
     # Run the bot until the user presses Ctrl-C
     # application.run_polling(allowed_updates=Update.ALL_TYPES)
+    
+    if os.getenv("MODE") == "prod":
 
-    application.run_webhook(
-        listen="0.0.0.0",
-        port=80,
-        secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
-        allowed_updates=Update.ALL_TYPES,
-        webhook_url="https://webhook.comrade-ho-chi-minh.space/",
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=80,
+            secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
+            allowed_updates=Update.ALL_TYPES,
+            webhook_url="https://webhook.comrade-ho-chi-minh.space/",
+            
+        )
+    else:
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
         
-    )
-
 
 
 def run_flask():

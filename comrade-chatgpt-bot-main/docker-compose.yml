@@ -27,7 +27,14 @@ services:
       context: ./telegram_bot
     command: python3 test-bot.py
     environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      DB_HOST: ${DB_HOST}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      IMAGE_PRICE: ${IMAGE_PRICE}
+
 
 
   # http://loki-local:3100
