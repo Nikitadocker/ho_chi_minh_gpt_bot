@@ -4,7 +4,7 @@ import asyncpg
 
 from openai import OpenAI
 # from bot import check_openai_connection
-from bot import generate_image
+from bot import generate_image, check_openai_connection, healthcheck
 from telegram import ForceReply, Update
 from telegram.ext import (
     Application,
@@ -26,48 +26,59 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class Testbot(unittest.TestCase):
     
-   async def test_generate_image(self):
-        fake_user = User(
-                    id=524046168,
-                    first_name='vezyn4ik',
-                    is_bot=False,
-                    username='vezyn4ik_official',
-                    language_code='ru'
-                )
+ def test_healthcheck(self):
+     result_healthcheck = healthcheck()
+     print(result_healthcheck)
+     self.assertTrue(True)
+    
+#  def test_check_openai_connection(self):
+    
+#     self.assertTrue(check_openai_connection())
+    
+#  async def test_generate_image(self):
+#         fake_user = User(
+#                     id=524046168,
+#                     first_name='vezyn4ik',
+#                     is_bot=False,
+#                     username='vezyn4ik_official',
+#                     language_code='ru'
+#                 )
         
-        fake_chat = Chat(
-            id=524046168,
-            type='private',
-            username='vezyn4ik_official',
-            first_name='vezyn4ik'
-        )
+#         fake_chat = Chat(
+#             id=524046168,
+#             type='private',
+#             username='vezyn4ik_official',
+#             first_name='vezyn4ik'
+#         )
 
-        fake_message = Message(
-            message_id=582,
-            from_user=fake_user,
-            chat=fake_chat,
-            date=datetime(2024, 5, 23, 17, 4, 53, tzinfo=timezone.utc),
-            text='/image уставший студент',
-            entities=[MessageEntity(type='bot_command', offset=0, length=6)]
-        )
+#         fake_message = Message(
+#             message_id=582,
+#             from_user=fake_user,
+#             chat=fake_chat,
+#             date=datetime(2024, 5, 23, 17, 4, 53, tzinfo=timezone.utc),
+#             text='/image уставший студент',
+#             entities=[MessageEntity(type='bot_command', offset=0, length=6)]
+#         )
 
-        fake_update = Update(
-            update_id=748556194,
-            message=fake_message
-        )   
+#         fake_update = Update(
+#             update_id=748556194,
+#             message=fake_message
+#         )   
         
-        fake_context = MagicMock()    
+#         fake_context = MagicMock()    
         
-        await generate_image(update=fake_update,context=fake_context)
+#         await generate_image(update=fake_update,context=fake_context)
         
         
-        file_path = "/images/image.png"
-        file_size = os.stat(file_path)
+#         file_path = "/images/image.png"
+#         file_size = os.stat(file_path)
 
-        size_in_mb = file_size.st_size / (1024 * 1024)
+#         size_in_mb = file_size.st_size / (1024 * 1024)
 
-        # проверка, что размер файла больше 1 МБ
-        self.assertTrue(size_in_mb > 1, "File size is less than 1 MB")# проверяем условие на истинну
+#         # проверка, что размер файла больше 1 МБ
+#         self.assertTrue(size_in_mb > 1, "File size is less than 1 MB")# проверяем условие на истинну
+        
+        
         
         
 

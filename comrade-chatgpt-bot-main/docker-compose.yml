@@ -25,8 +25,8 @@ services:
   unit-test:
     build:
       context: ./telegram_bot
-    # command: python3 test-bot.py
-    command: python3 test-openai.py
+    command: python3 test.py
+    # command: python3 test-openai.py
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -69,8 +69,12 @@ services:
 
   postgres:
     image: postgres:16.2
+    command: ["-c", "log_statement=ddl"]
+    # command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
     ports:
       - "5432:5432"
+    # ports:
+    #   - "5432:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
