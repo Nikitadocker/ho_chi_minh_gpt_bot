@@ -22,7 +22,7 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 app.config["SERVER_NAME"] = f"{os.getenv('MY_POD_IP', '0.0.0.0')}:5000"
 
-# client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 IMAGE_PRICE = float(os.getenv("IMAGE_PRICE", "0.10"))  # Default price per image
 
 log_to_file = os.getenv("LOG_TO_FILE", "False") == "True"
