@@ -11,10 +11,19 @@ on:
       - 'comrade-chatgpt-bot-main/telegram_bot/**'
 
 jobs:
-  build_and_push:
+  test_build_and_push:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: Populate .env file
+      run: |
+        touch .env
+        echo "${{ secrets.FULL_ENV }}" >> .env
+
+    - name: Run unit tests
+      run: |
+        docker compose run --build --rm telegram-bot python test_bot.py
 
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV

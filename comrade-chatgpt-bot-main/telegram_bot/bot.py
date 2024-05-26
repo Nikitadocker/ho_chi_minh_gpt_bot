@@ -64,10 +64,10 @@ logger = logging.getLogger(__name__)
 # Replace None with your OpenAI API key
 
 
-def check_openai_connection():
+def check_openai_connection(api_key=os.getenv("OPENAI_API_KEY")):
     """Check if the OpenAI API is reachable."""
     try:
-        test_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        test_client = OpenAI(api_key=api_key)
 
         completion = test_client.chat.completions.create(
             model="gpt-3.5-turbo",
