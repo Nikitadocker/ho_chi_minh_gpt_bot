@@ -310,7 +310,7 @@ def main() -> None:
         )
     else:
         application.run_polling(allowed_updates=Update.ALL_TYPES)
-  
+ 
 def run_flask():
     """Run the Flask app."""
     app.run(debug=False)
