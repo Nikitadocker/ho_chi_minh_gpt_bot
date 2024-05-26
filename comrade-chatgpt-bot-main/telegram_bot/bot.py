@@ -309,14 +309,11 @@ def main() -> None:
             port=80,
             secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
             allowed_updates=Update.ALL_TYPES,
-            webhook_url="https://webhook.comrade-ho-chi-minh.space/",
-            
+            webhook_url="https://webhook.comrade-ho-chi-minh.space/",   
         )
     else:
         application.run_polling(allowed_updates=Update.ALL_TYPES)
         
-
-
 def run_flask():
     """Run the Flask app."""
     app.run(debug=False)
@@ -326,5 +323,4 @@ if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
     main()
-
 
