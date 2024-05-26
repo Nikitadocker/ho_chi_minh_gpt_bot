@@ -166,7 +166,6 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     """Generate image when the command /image is issued"""
     # user_message = update.message.text
     logger.info(update)
-    
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
@@ -312,7 +311,7 @@ def main() -> None:
         )
     else:
         application.run_polling(allowed_updates=Update.ALL_TYPES)
-        
+   
 def run_flask():
     """Run the Flask app."""
     app.run(debug=False)
