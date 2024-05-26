@@ -24,6 +24,7 @@ jobs:
     - name: Run unit tests
       run: |
         docker compose run --build --rm telegram-bot python test_bot.py
+      working-directory: ./comrade-chatgpt-bot-main/
 
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
