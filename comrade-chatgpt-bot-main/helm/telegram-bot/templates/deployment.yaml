@@ -103,6 +103,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
                   key: IMAGE_PRICE
+            - name: MODE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: MODE
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:
