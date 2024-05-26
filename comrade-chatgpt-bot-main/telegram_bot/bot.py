@@ -301,7 +301,6 @@ def main() -> None:
     # Run the bot until the user presses Ctrl-C
     # application.run_polling(allowed_updates=Update.ALL_TYPES)   
     if os.getenv("MODE") == "prod":
-
         application.run_webhook(
             listen="0.0.0.0",
             port=80,
