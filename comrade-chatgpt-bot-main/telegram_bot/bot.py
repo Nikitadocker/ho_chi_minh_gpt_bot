@@ -300,8 +300,7 @@ def main() -> None:
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gpt_prompt))
 
     # Run the bot until the user presses Ctrl-C
-    # application.run_polling(allowed_updates=Update.ALL_TYPES)
-    
+    # application.run_polling(allowed_updates=Update.ALL_TYPES)   
     if os.getenv("MODE") == "prod":
 
         application.run_webhook(
@@ -323,4 +322,3 @@ if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
     main()
-
