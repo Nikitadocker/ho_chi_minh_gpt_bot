@@ -1,6 +1,7 @@
 """
 This application contains a Telegram bot that uses OpenAI's GPT model to generate responses and images.
 """
+
 import os
 import logging
 from decimal import Decimal
@@ -11,7 +12,7 @@ from logfmter import Logfmter
 app = Flask(__name__, template_folder="templates")
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
-log_to_file = os.getenv('LOG_TO_FILE', 'False') == 'True'
+log_to_file = os.getenv("LOG_TO_FILE", "False") == "True"
 
 formatter = Logfmter(
     keys=["timestamp", "logger", "at", "process", "msq"],
@@ -24,8 +25,6 @@ formatter = Logfmter(
     },
     datefmt="%Y-%m-%dT%H:%M:%S",
 )
-
-
 
 
 handler_stdout = logging.StreamHandler()
@@ -47,20 +46,15 @@ logger = logging.getLogger(__name__)
 
 
 def get_db_connection(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("POSTGRES_DB"),
-        user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD")
+    host=os.getenv("DB_HOST"),
+    database=os.getenv("POSTGRES_DB"),
+    user=os.getenv("POSTGRES_USER"),
+    password=os.getenv("POSTGRES_PASSWORD"),
 ):
     """
     Establishes and returns a database connection.
     """
-    conn = psycopg2.connect(
-        host=host,
-        database=database,
-        user=user,
-        password=password
-    )
+    conn = psycopg2.connect(host=host, database=database, user=user, password=password)
     return conn
 
 
@@ -81,7 +75,8 @@ def index():
         "index.html", allowed_users=allowed_users, users_balance=users_balance
     )  # список пользователей будем динамическими данными
 
-@app.route('/health')
+
+@app.route("/health")
 def health():
     """
     Health check endpoint.
@@ -155,27 +150,33 @@ def add_users_balance():
     conn = get_db_connection()
     cur = conn.cursor()
     try:
-        cur.execute("SELECT  balance  FROM user_balances where user_id = %s", (user_id,))
+        cur.execute(
+            "SELECT  balance  FROM user_balances where user_id = %s", (user_id,)
+        )
         current_balance = cur.fetchone()
         if current_balance:
             new_balance = current_balance[0] + balance_to_add
             cur.execute(
-        "UPDATE user_balances SET balance = %s WHERE user_id = %s",
-        (new_balance, user_id))
+                "UPDATE user_balances SET balance = %s WHERE user_id = %s",
+                (new_balance, user_id),
+            )
         else:
-             cur.execute("INSERT INTO user_balances "
-                        "(user_id, balance, images_generated) VALUES (%s, %s, 0)",
-                        (user_id, balance_to_add)),
+            cur.execute(
+                "INSERT INTO user_balances "
+                "(user_id, balance, images_generated) VALUES (%s, %s, 0)",
+                (user_id, balance_to_add),
+            ),
         conn.commit()
-        flash(f"Balance updated for user {user_id}.", 'success')
+        flash(f"Balance updated for user {user_id}.", "success")
     except psycopg2.Error as e:
         conn.rollback()
-        flash(f"Failed to update balance for user {user_id}: {str(e)}", 'danger')
+        flash(f"Failed to update balance for user {user_id}: {str(e)}", "danger")
     finally:
 
         cur.close()
         conn.close()
     return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
