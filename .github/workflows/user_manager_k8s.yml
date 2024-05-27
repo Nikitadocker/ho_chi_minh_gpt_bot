@@ -10,10 +10,23 @@ on:
       - 'comrade-chatgpt-bot-main/user_manager/**'
 
 jobs:
-  build_and_push:
+  test_build_and_push:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: Populate .env file
+      run: |
+        touch .env
+        echo "${{ secrets.FULL_ENV }}" >> .env
+      working-directory: ./comrade-chatgpt-bot-main/
+
+    - name: Run unit tests
+      run: |
+        docker compose up -d postgres
+        docker compose up liquibase
+        docker compose run --build --rm user-manager python test_user_manager.py
+      working-directory: ./comrade-chatgpt-bot-main/
 
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV

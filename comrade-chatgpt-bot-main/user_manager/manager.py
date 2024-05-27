@@ -46,16 +46,20 @@ logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def get_db_connection():
-    """
-    Connects to the database using the credentials from environment variables.
-    Returns the connection object.
-    """
-    conn = psycopg2.connect(
+def get_db_connection(
         host=os.getenv("DB_HOST"),
         database=os.getenv("POSTGRES_DB"),
         user=os.getenv("POSTGRES_USER"),
-        password=os.getenv("POSTGRES_PASSWORD"),
+        password=os.getenv("POSTGRES_PASSWORD")
+):
+    """
+    Establishes and returns a database connection.
+    """
+    conn = psycopg2.connect(
+        host=host,
+        database=database,
+        user=user,
+        password=password
     )
     return conn
 
