@@ -173,12 +173,9 @@ def add_users_balance():
         flash(f"Failed to update balance for user {user_id}: {str(e)}", 'danger')
     finally:
 
-
-         
         cur.close()
         conn.close()
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
     app.run(debug=True)
-#
