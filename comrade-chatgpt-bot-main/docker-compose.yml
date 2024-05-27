@@ -99,7 +99,7 @@ services:
       - postgres
 
 
-  user-management:
+  user-manager:
     build:
       context: ./user_manager
     environment:
