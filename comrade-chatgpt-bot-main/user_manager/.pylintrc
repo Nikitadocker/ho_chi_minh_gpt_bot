@@ -1,2 +1,10 @@
+[MESSAGES CONTROL]
+
+disable=expression-not-assigned
+
 [FORMAT]
 max-line-length=140
+
+
+
+

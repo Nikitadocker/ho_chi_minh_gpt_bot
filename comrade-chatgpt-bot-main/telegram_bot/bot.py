@@ -64,10 +64,10 @@ logger = logging.getLogger(__name__)
 # Replace None with your OpenAI API key
 
 
-def check_openai_connection():
+def check_openai_connection(api_key=os.getenv("OPENAI_API_KEY")):
     """Check if the OpenAI API is reachable."""
     try:
-        test_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        test_client = OpenAI(api_key=api_key)
 
         completion = test_client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -165,6 +165,7 @@ async def help_command(
 async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Generate image when the command /image is issued"""
     # user_message = update.message.text
+    logger.info(update)
     user = update.effective_user
 
     if not await is_user_allowed(user.id):
@@ -206,7 +207,8 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     logger.info("User %s (%s) requested to generate image", user.id, user.username)
     try:
         response_image = client.images.generate(
-            model="dall-e-3",
+            # model="dall-e-3",
+            model="228",
             prompt=prompt,
             size="1024x1024",
             quality="standard",
@@ -214,9 +216,9 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
         image_url = response_image.data[0].url
         responce_url = requests.get(image_url, timeout=100)
-        with open("./images/image.png", "wb") as f:
+        with open("/images/image.png", "wb") as f:
             f.write(responce_url.content)
-        with open("./images/image.png", "rb") as f:
+        with open("/images/image.png", "rb") as f:
             await update.message.reply_photo(f)
 
         conn = await db_connect()
@@ -298,17 +300,16 @@ def main() -> None:
 
     # Run the bot until the user presses Ctrl-C
     # application.run_polling(allowed_updates=Update.ALL_TYPES)
-
-    application.run_webhook(
-        listen="0.0.0.0",
-        port=80,
-        secret_token=os.getenv("SECRET_TOKEN_FORWEBHOOK"),
-        allowed_updates=Update.ALL_TYPES,
-        webhook_url="https://webhook.comrade-ho-chi-minh.space/",
-        
-    )
-
-
+    if os.getenv("MODE") == "prod":
+        application.run_webhook(
+            listen="0.0.0.0",
+            port=80,
+            secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
+            allowed_updates=Update.ALL_TYPES,
+            webhook_url="https://webhook.comrade-ho-chi-minh.space/",
+        )
+    else:
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 def run_flask():
     """Run the Flask app."""
@@ -319,5 +320,3 @@ if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
     main()
-
-#
