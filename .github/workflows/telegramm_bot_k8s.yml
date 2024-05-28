@@ -88,5 +88,3 @@ jobs:
       run: |
         helm upgrade --install  --namespace comrade-ho-chi-minh telegramm-bot --set image.tag=${{ env.COMMIT_HASH }} ./telegram-bot      
       working-directory: ./comrade-chatgpt-bot-main/helm
-
-#
