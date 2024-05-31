@@ -2,3 +2,5 @@
 telegram_bot/.env
 grafana/.env
 .env
+comrade-chatgpt-bot-main/digitalocean/helm_grafana/terraform.tfstate
+comrade-chatgpt-bot-main/digitalocean/helm_grafana/terraform.tfstate.backup
