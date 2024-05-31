@@ -1,0 +1,21 @@
+loki:
+  auth_enabled: false
+  commonConfig:
+    replication_factor: 1
+  storage:
+    type: 'filesystem'
+singleBinary:
+  replicas: 1
+  persistence:
+    size: 1Gi
+  storageClass: do-block-storage
+monitoring:
+  selfMonitoring:
+    grafanaAgent:
+      installOperator: false
+  lokiCanary:
+    enabled: false
+gateway:
+  enabled: true
+test:
+  enabled: false
