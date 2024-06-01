@@ -4,6 +4,8 @@ loki:
     replication_factor: 1
   storage:
     type: 'filesystem'
+  query_scheduler:
+    max_outstanding_requests_per_tenant: 10000
 singleBinary:
   replicas: 1
   persistence:
