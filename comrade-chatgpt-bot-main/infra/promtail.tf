@@ -7,7 +7,7 @@ resource "helm_release" "promtail" {
 
 
   values = [
-    templatefile("${path.module}/values.yaml", {})
+    templatefile("${path.module}/promtail_values.yaml", {})
   ]
 
 

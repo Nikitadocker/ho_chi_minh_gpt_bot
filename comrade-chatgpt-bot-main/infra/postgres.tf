@@ -7,7 +7,7 @@ resource "helm_release" "postgres" {
 
 
   values = [
-    templatefile("${path.module}/values.yaml", {})
+    templatefile("${path.module}/postgres_values.yaml", {})
   ]
 
 

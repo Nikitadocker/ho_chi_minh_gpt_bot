@@ -7,7 +7,7 @@ resource "helm_release" "ingress-controller" {
 
 
   values = [
-    templatefile("${path.module}/values.yaml", {})
+    templatefile("${path.module}/ingress_controller_values.yaml", {})
   ]
 
 

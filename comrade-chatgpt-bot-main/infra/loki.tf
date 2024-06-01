@@ -7,7 +7,7 @@ resource "helm_release" "loki" {
 
 
   values = [
-    templatefile("${path.module}/values.yaml", {})
+    templatefile("${path.module}/loki_values.yaml", {})
   ]
 
 

@@ -7,7 +7,7 @@ resource "helm_release" "grafana" {
 
 
   values = [
-    templatefile("${path.module}/values.yaml", {})
+    templatefile("${path.module}/grafana_values.yaml", {})
   ]
 
 

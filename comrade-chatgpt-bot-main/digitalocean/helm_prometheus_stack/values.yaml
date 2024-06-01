@@ -1,2 +1,20 @@
+alertmanager:
+  enabled: false
 grafana:
+  enabled: false
+kube-state-metrics:
   enabled: true
+nodeExporter:
+  enabled: true
+prometheus:
+  enabled: true
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+          storageClassName: do-block-storage
