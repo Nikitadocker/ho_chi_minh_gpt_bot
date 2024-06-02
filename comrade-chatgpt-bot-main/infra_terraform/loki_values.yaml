@@ -14,7 +14,7 @@ singleBinary:
 monitoring:
   selfMonitoring:
     grafanaAgent:
-      installOperator: false
+      installOperator: true
   lokiCanary:
     enabled: false
 gateway:

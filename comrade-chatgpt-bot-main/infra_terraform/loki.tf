@@ -4,6 +4,8 @@ resource "helm_release" "loki" {
   chart      = "loki"
   version    = "5.47.2"
   namespace = "loki"
+  create_namespace = true
+
 
 
   values = [

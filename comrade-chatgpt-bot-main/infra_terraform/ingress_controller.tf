@@ -4,6 +4,7 @@ resource "helm_release" "ingress-controller" {
   chart      = "ingress-nginx"
   version    = "4.10.1"
   namespace = "ingress-controller"
+  create_namespace = true
 
 
   values = [

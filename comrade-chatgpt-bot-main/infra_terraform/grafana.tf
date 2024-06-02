@@ -4,6 +4,8 @@ resource "helm_release" "grafana" {
   chart      = "grafana"
   version    = "7.3.9"
   namespace = "grafana"
+  create_namespace = true
+
 
 
   values = [

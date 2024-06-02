@@ -4,6 +4,8 @@ resource "helm_release" "postgres" {
   chart      = "postgresql"
   version    = "15.2.5"
   namespace = "postgres"
+  create_namespace = true
+
 
 
   values = [

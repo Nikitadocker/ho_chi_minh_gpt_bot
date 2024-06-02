@@ -4,6 +4,7 @@ resource "helm_release" "promtail" {
   chart      = "promtail"
   version    = "6.15.5"
   namespace = "promtail"
+  create_namespace = true
 
 
   values = [
