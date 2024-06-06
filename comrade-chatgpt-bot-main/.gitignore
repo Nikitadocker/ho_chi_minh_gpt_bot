@@ -4,3 +4,7 @@ grafana/.env
 .env
 comrade-chatgpt-bot-main/digitalocean/helm_grafana/terraform.tfstate
 comrade-chatgpt-bot-main/digitalocean/helm_grafana/terraform.tfstate.backup
+comrade-chatgpt-bot-main/infra_terraform/kubernetus/variables.tf
+terraform.tfstate
+terraform.tfstate.backup
+variables.tf
