@@ -20,8 +20,8 @@ resource "aws_subnet" "my_vpc_subnet_public_01" {
 }
 
 
-#данный компонент позволяте нашей vpc коммуницировать с интернетом
-resource "aws_internet_gateway" "eks-demo-internet-gateway-01" {
+#данный компонент позволяте нашей vpc коммуницировать с интернет
+resource "aws_internet_gateway" "my-eks-internet-gateway-01" {
   vpc_id = aws_vpc.eks-demo-vpc-01.id
   tags = {
     Name = "eks-demo-internet-gateway-01"
