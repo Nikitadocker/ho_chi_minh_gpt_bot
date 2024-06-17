@@ -8,3 +8,5 @@ comrade-chatgpt-bot-main/infra_terraform/kubernetus/variables.tf
 terraform.tfstate
 terraform.tfstate.backup
 variables.tf
+.terraform
+.terraform.lock.hcl
