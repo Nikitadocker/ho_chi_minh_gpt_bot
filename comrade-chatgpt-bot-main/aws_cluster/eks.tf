@@ -42,7 +42,7 @@ resource "aws_route" "eks-internet_access" {
 resource "aws_eks_cluster" "eks-study-cluster-01" {
   name     = "eks-study-cluster-01"
   version  = "1.30"
-  role_arn = aws_iam_role.eks-demo-cluster-admin-role-01.arn
+  role_arn = aws_iam_role.eks-study-cluster-admin-role-01.arn
 
   vpc_config {
     subnet_ids              = [aws_subnet.my_vpc_subnet_public_01.id]
@@ -51,15 +51,15 @@ resource "aws_eks_cluster" "eks-study-cluster-01" {
     public_access_cidrs     = ["0.0.0.0/0"]
   }
   depends_on = [
-    aws_iam_role_policy_attachment.eks-demo-cluster-01-AmazonEKSClusterPolicy,aws_iam_role_policy_attachment.eks-demo-cluster-01-AmazonEKSVPCResourceController
+    aws_iam_role_policy_attachment.eks-study-cluster-01-AmazonEKSClusterPolicy, aws_iam_role_policy_attachment.eks-study-cluster-01-AmazonEKSVPCResourceController
   ]
   tags = {
-    demo = "eks"
+    study = "eks"
   }
 }
 
-
-data "aws_iam_policy_document" "eks-demo-cluster-admin-role-policy" {
+#policy в виде json
+data "aws_iam_policy_document" "eks-study-cluster-admin-role-policy" {
   statement {
     effect = "Allow"
     principals {
@@ -75,23 +75,46 @@ data "aws_iam_policy_document" "eks-demo-cluster-admin-role-policy" {
 
 # eks-cluster-03
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role
-resource "aws_iam_role" "eks-demo-cluster-admin-role-01" {
-  name               = "eks-demo-cluster-admin-role-01"
-  assume_role_policy = data.aws_iam_policy_document.eks-demo-cluster-admin-role-policy.json
+resource "aws_iam_role" "eks-study-cluster-admin-role-01" {
+  name               = "eks-study-cluster-admin-role-01"
+  assume_role_policy = data.aws_iam_policy_document.eks-study-cluster-admin-role-policy.json
 }
 
 # Policy в aws это обьект который определяет разрешения для управления ресурсами
 
 #Данный ресурс прикрепляет role к policy
-# Данная роль может упралять nodes и cоздавать load balancing
-resource "aws_iam_role_policy_attachment" "eks-demo-cluster-01-AmazonEKSClusterPolicy" {
+# Данная политика может упралять nodes и cоздавать load balancing
+resource "aws_iam_role_policy_attachment" "eks-study-cluster-01-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks-demo-cluster-admin-role-01.name
+  role       = aws_iam_role.eks-study-cluster-admin-role-01.name
+}
+
+# Данная политика может упралять EPI и IP для worker node
+resource "aws_iam_role_policy_attachment" "eks-study-cluster-01-AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.eks-study-cluster-admin-role-01.name
 }
 
 
-# Reference: https://docs.aws.amazon.com/eks/latest/userguide/security-groups-for-pods.html
-resource "aws_iam_role_policy_attachment" "eks-demo-cluster-01-AmazonEKSVPCResourceController" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks-demo-cluster-admin-role-01.name
+resource "aws_eks_addon" "eks-study-addon-coredns" {
+  cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
+  addon_name                  = "coredns"
+  addon_version               = "v1.10.1-eksbuild.2" 
+  resolve_conflicts_on_create = "OVERWRITE" 
+}
+
+
+resource "aws_eks_addon" "eks-study-addon-kube-proxy" {
+  cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
+  addon_name                  = "kube-proxy"
+  addon_version               = "v1.28.1-eksbuild.1" 
+  resolve_conflicts_on_create = "OVERWRITE" 
+}
+
+
+resource "aws_eks_addon" "eks-study-addon-vpc-cni" {
+  cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
+  addon_name                  = "vpc-cni"
+  addon_version               = "v1.14.1-eksbuild.1" 
+  resolve_conflicts_on_create = "OVERWRITE" 
 }
