@@ -128,7 +128,7 @@ output "kubeconfig-certificate-authority-data" {
   value = aws_eks_cluster.eks-study-cluster-01.certificate_authority[0].data
 }
 
-#desired
+#desired это желаемое количество нод
 resource "aws_eks_node_group" "eks-study-ec2-node-group-01" {
   cluster_name    = aws_eks_cluster.eks-study-cluster-01.name
   node_group_name = "eks-study-node-group-01"
@@ -154,8 +154,8 @@ resource "aws_eks_node_group" "eks-study-ec2-node-group-01" {
 }
 
 
-resource "aws_iam_role" "eks-demo-ec2-node-group-role-01" {
-  name = "eks-demo-ec2-node-group-role-01"
+resource "aws_iam_role" "eks-study-ec2-node-group-role-01" {
+  name = "eks-study-ec2-node-group-role-01"
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"
@@ -169,17 +169,17 @@ resource "aws_iam_role" "eks-demo-ec2-node-group-role-01" {
 }
 
 
-resource "aws_iam_role_policy_attachment" "eks-demo-node-group-AmazonEKSWorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "eks-study-node-group-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks-demo-ec2-node-group-role-01.name
+  role       = aws_iam_role.eks-study-ec2-node-group-role-01.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks-demo-node-group-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "eks-study-node-group-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.eks-demo-ec2-node-group-role-01.name
+  role       = aws_iam_role.eks-study-ec2-node-group-role-01.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks-demo-node-group-AmazonEC2ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "eks-study-node-group-AmazonEC2ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.eks-demo-ec2-node-group-role-01.name
+  role       = aws_iam_role.eks-study-ec2-node-group-role-01.name
 }
