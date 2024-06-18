@@ -20,6 +20,17 @@ resource "aws_subnet" "my_vpc_subnet_public_01" {
 }
 
 
+resource "aws_subnet" "my_vpc_subnet_public_02" {
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1b"
+  vpc_id                  = aws_vpc.my_vpc.id
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "my_vpc_subnet_public_02"
+  }
+}
+
+
 #данный компонент позволяте нашей vpc коммуницировать с интернет
 resource "aws_internet_gateway" "my-eks-internet-gateway-01" {
   vpc_id = aws_vpc.my_vpc.id
@@ -45,7 +56,7 @@ resource "aws_eks_cluster" "eks-study-cluster-01" {
   role_arn = aws_iam_role.eks-study-cluster-admin-role-01.arn
 
   vpc_config {
-    subnet_ids              = [aws_subnet.my_vpc_subnet_public_01.id]
+    subnet_ids              = [aws_subnet.my_vpc_subnet_public_01.id,aws_subnet.my_vpc_subnet_public_02.id]
     endpoint_public_access  = true
     endpoint_private_access = true
     public_access_cidrs     = ["0.0.0.0/0"]
@@ -99,7 +110,7 @@ resource "aws_iam_role_policy_attachment" "eks-study-cluster-01-AmazonEKSVPCReso
 resource "aws_eks_addon" "eks-study-addon-coredns" {
   cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
   addon_name                  = "coredns"
-  addon_version               = "v1.10.1-eksbuild.2" 
+  # addon_version               = "v1.10.1-eksbuild.2" 
   resolve_conflicts_on_create = "OVERWRITE" 
 }
 
@@ -107,7 +118,7 @@ resource "aws_eks_addon" "eks-study-addon-coredns" {
 resource "aws_eks_addon" "eks-study-addon-kube-proxy" {
   cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
   addon_name                  = "kube-proxy"
-  addon_version               = "v1.28.1-eksbuild.1" 
+  # addon_version               = "v1.28.1-eksbuild.1" 
   resolve_conflicts_on_create = "OVERWRITE" 
 }
 
@@ -115,7 +126,7 @@ resource "aws_eks_addon" "eks-study-addon-kube-proxy" {
 resource "aws_eks_addon" "eks-study-addon-vpc-cni" {
   cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
   addon_name                  = "vpc-cni"
-  addon_version               = "v1.14.1-eksbuild.1" 
+  # addon_version               = "v1.14.1-eksbuild.1" 
   resolve_conflicts_on_create = "OVERWRITE" 
 }
 
@@ -133,7 +144,7 @@ resource "aws_eks_node_group" "eks-study-ec2-node-group-01" {
   cluster_name    = aws_eks_cluster.eks-study-cluster-01.name
   node_group_name = "eks-study-node-group-01"
   node_role_arn   = aws_iam_role.eks-study-ec2-node-group-role-01.arn
-  subnet_ids      = [aws_subnet.my_vpc_subnet_public_01.id]
+  subnet_ids      = [aws_subnet.my_vpc_subnet_public_01.id,aws_subnet.my_vpc_subnet_public_02.id]
   instance_types  = ["t3.medium"]
 
   scaling_config {
