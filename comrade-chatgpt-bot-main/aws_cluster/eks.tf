@@ -111,10 +111,19 @@ resource "aws_eks_addon" "eks-study-addon-kube-proxy" {
   resolve_conflicts_on_create = "OVERWRITE" 
 }
 
-
+#аддлн для Eni
 resource "aws_eks_addon" "eks-study-addon-vpc-cni" {
   cluster_name                = aws_eks_cluster.eks-study-cluster-01.name
   addon_name                  = "vpc-cni"
   addon_version               = "v1.14.1-eksbuild.1" 
   resolve_conflicts_on_create = "OVERWRITE" 
+}
+
+
+output "endpoint" {
+  value = aws_eks_cluster.eks-study-cluster-01.endpoint
+}
+
+output "kubeconfig-certificate-authority-data" {
+  value = aws_eks_cluster.eks-study-cluster-01.certificate_authority[0].data
 }
