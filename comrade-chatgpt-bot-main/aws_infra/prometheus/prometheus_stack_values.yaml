@@ -1,0 +1,27 @@
+alertmanager:
+  enabled: false
+grafana:
+  enabled: true
+  persistence:
+    type: pvc
+    enabled: true
+    storageClassName: gp2
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+kube-state-metrics:
+  enabled: true
+nodeExporter:
+  enabled: true
+prometheus:
+  enabled: true
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+          - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Gi
+          storageClassName: gp2

@@ -1,0 +1,17 @@
+persistence:
+  type: pvc
+  enabled: true
+  storageClassName: do-block-storage
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.loki:80
+      access: proxy
+      isDefault: true
