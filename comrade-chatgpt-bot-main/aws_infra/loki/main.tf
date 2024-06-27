@@ -24,7 +24,7 @@ terraform {
   backend "s3" {
     profile        = "study"
     bucket         = "study-terraform-states"
-    key            = "logging.tfstate"
+    key            = "loki.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-locks"
   }
@@ -35,22 +35,23 @@ provider "aws" {
   region  = "ap-southeast-1"
 }
 
+
 provider "kubectl" {
   config_path= "~/.kube/config"
-  config_context = "arn:aws:eks:us-east-1:632497825040:cluster/study-cluster"
+  config_context = "arn:aws:eks:ap-southeast-1:632497825040:cluster/study-cluster"
 
 }
 
 provider "helm" {
   kubernetes {
     config_path= "~/.kube/config"
-    config_context = "arn:aws:eks:us-east-1:632497825040:cluster/study-cluster"
+    config_context = "arn:aws:eks:ap-southeast-1:632497825040:cluster/study-cluster"
 
   }
 }
 
 provider "kubernetes" {
   config_path= "~/.kube/config"
-  config_context = "arn:aws:eks:us-east-1:632497825040:cluster/study-cluster"
+  config_context = "arn:aws:eks:ap-southeast-1:632497825040:cluster/study-cluster"
 
 }
