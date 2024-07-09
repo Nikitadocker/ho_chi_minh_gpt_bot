@@ -89,9 +89,7 @@ def check_openai_connection(api_key=os.getenv("OPENAI_API_KEY")):
 def healthcheck():
     """Check the health of the bot's dependencies."""
     # openai_ok = check_openai_connection()
-    
     openai_ok = True
-    
     healthcheck_log = logging.getLogger('werkzeug')
     healthcheck_log.setLevel(logging.ERROR)
 
