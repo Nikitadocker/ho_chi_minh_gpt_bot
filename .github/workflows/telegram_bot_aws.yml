@@ -72,6 +72,13 @@ jobs:
     - name: Push the liquibase docker image
       run: docker push paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
 
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-southeast-1
+
     - uses: azure/setup-kubectl@v3
 
     - name: Configure kubectl
@@ -86,12 +93,9 @@ jobs:
     #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     # наше окружение это aws server
 
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-southeast-1
+    - name: Update kubeconfig
+      run: aws eks --profile study --region ap-southeast-1 update-kubeconfig --name study-cluster
+
 
     - name: helm upgrade --install
       run: |
