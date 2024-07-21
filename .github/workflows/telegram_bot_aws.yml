@@ -93,6 +93,12 @@ jobs:
     #     token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     # наше окружение это aws server
 
+    - name: create profile
+      run: |
+        aws configure --profile study set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure --profile study set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure --profile study set region us-east-1
+
     - name: Update kubeconfig
       run: aws eks --profile study --region ap-southeast-1 update-kubeconfig --name study-cluster
 
