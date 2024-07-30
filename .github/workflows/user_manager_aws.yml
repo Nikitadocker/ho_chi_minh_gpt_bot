@@ -1,6 +1,7 @@
 name: User Manager Kubernetes
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened

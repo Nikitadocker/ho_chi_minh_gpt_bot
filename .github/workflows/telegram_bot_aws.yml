@@ -1,6 +1,7 @@
 name: Telegram Bot Kubernetes
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
