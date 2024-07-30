@@ -69,5 +69,5 @@ jobs:
         
     - name: kubectl set image
       run: |
-        helm upgrade --install  --namespace comrade-ho-chi-minh user-manager --set image.tag=${{ env.COMMIT_HASH }} ./user-manager 
+        helm upgrade --install  --namespace comrade-ho-chi-minh --create-namespace user-manager --set image.tag=${{ env.COMMIT_HASH }} ./user-manager 
       working-directory: ./comrade-chatgpt-bot-main/helm
