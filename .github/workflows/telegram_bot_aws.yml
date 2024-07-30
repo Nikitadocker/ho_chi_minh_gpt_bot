@@ -84,5 +84,5 @@ jobs:
 
     - name: Create app secrets
       run: |
-        kubectl apply -f app_secrets.yaml -n 
+        kubectl apply -f app_secrets.yaml -n comrade-ho-chi-minh
       working-directory: ./comrade-chatgpt-bot-main/
