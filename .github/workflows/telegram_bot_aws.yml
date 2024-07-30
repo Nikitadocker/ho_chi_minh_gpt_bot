@@ -76,10 +76,15 @@ jobs:
         helm upgrade --install  --namespace comrade-ho-chi-minh --create-namespace telegramm-bot --set image.tag=${{ env.COMMIT_HASH }} ./telegram-bot      
       working-directory: ./comrade-chatgpt-bot-main/helm
 
+    # - name: Populate app secrets
+    #   run: |
+    #     touch app_secrets.yaml
+    #     echo "${{ secrets.APP_SECRETS }}" >> app_secrets.yaml
+    #   working-directory: ./comrade-chatgpt-bot-main/
+
     - name: Populate app secrets
       run: |
-        touch app_secrets.yaml
-        echo "${{ secrets.APP_SECRETS }}" >> app_secrets.yaml
+        printf '%s' "${{ secrets.APP_SECRETS }}" > app_secrets.yaml
       working-directory: ./comrade-chatgpt-bot-main/
 
     - name: Create app secrets
