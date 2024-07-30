@@ -36,12 +36,11 @@ jobs:
         pylint --rcfile=./telegram_bot/.pylintrc ./telegram_bot
       working-directory: ./comrade-chatgpt-bot-main
 
-    
 
-    - name: Populate .env file
+    - name: Populate app secrets
       run: |
-        touch .env
-        echo "${{ secrets.FULL_ENV }}" >> .env
+        touch app_secrets.yaml
+        echo "${{ secrets.APP_SECRETS }}" >> app_secrets.yaml
       working-directory: ./comrade-chatgpt-bot-main/
 
     - name: Set commit hash

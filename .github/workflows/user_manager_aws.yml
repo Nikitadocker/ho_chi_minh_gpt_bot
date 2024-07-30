@@ -35,12 +35,6 @@ jobs:
         pylint  --rcfile=./user_manager/.pylintrc ./user_manager
       working-directory: ./comrade-chatgpt-bot-main
 
-    - name: Populate .env file
-      run: |
-        touch .env
-        echo "${{ secrets.FULL_ENV }}" >> .env
-      working-directory: ./comrade-chatgpt-bot-main/
-
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
