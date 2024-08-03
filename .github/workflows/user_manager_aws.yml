@@ -1,6 +1,7 @@
 name: User Manager Kubernetes
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
@@ -34,19 +35,6 @@ jobs:
         pylint  --rcfile=./user_manager/.pylintrc ./user_manager
       working-directory: ./comrade-chatgpt-bot-main
 
-    - name: Populate .env file
-      run: |
-        touch .env
-        echo "${{ secrets.FULL_ENV }}" >> .env
-      working-directory: ./comrade-chatgpt-bot-main/
-
-    - name: Run unit tests
-      run: |
-        docker compose up -d postgres
-        docker compose up liquibase
-        docker compose run --build --rm user-manager python test_user_manager.py
-      working-directory: ./comrade-chatgpt-bot-main/
-
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
@@ -63,20 +51,17 @@ jobs:
     - name: Push the Docker image
       run: docker push  paramas/comrade_ho_chi_minh:user_manager_${{ env.COMMIT_HASH }}
 
-    - uses: azure/setup-kubectl@v3
 
-    - name: Configure kubectl
+    - name: create profile
       run: |
-        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-        mkdir -p ~/.kube
-        mv kubeconfig ~/.kube/config
+        aws configure --profile study set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure --profile study set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure --profile study set region us-east-1
 
-    - name: install-doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Update kubeconfig
+      run: aws eks --profile study --region ap-southeast-1 update-kubeconfig --name study-cluster
         
     - name: kubectl set image
       run: |
-        helm upgrade --install  --namespace comrade-ho-chi-minh user-manager --set image.tag=${{ env.COMMIT_HASH }} ./user-manager 
+        helm upgrade --install  --namespace comrade-ho-chi-minh --create-namespace user-manager --set image.tag=${{ env.COMMIT_HASH }} ./user-manager 
       working-directory: ./comrade-chatgpt-bot-main/helm

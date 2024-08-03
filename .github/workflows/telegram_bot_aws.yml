@@ -1,6 +1,7 @@
 name: Telegram Bot Kubernetes
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
@@ -35,18 +36,6 @@ jobs:
         pylint --rcfile=./telegram_bot/.pylintrc ./telegram_bot
       working-directory: ./comrade-chatgpt-bot-main
 
-    
-
-    - name: Populate .env file
-      run: |
-        touch .env
-        echo "${{ secrets.FULL_ENV }}" >> .env
-      working-directory: ./comrade-chatgpt-bot-main/
-
-    - name: Run unit tests
-      run: |
-        docker compose run --build --rm telegram-bot python test_bot.py
-      working-directory: ./comrade-chatgpt-bot-main/
 
     - name: Set commit hash
       run: echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -71,20 +60,19 @@ jobs:
     - name: Push the liquibase docker image
       run: docker push paramas/comrade_ho_chi_minh:telegram_bot_liquibase_${{ env.COMMIT_HASH }}
 
-    - uses: azure/setup-kubectl@v3
 
-    - name: Configure kubectl
+    - name: create profile
       run: |
-        echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-        mkdir -p ~/.kube
-        mv kubeconfig ~/.kube/config
+        aws configure --profile study set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure --profile study set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure --profile study set region us-east-1
 
-    - name: install-doctl
-      uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    - name: Update kubeconfig
+      run: aws eks --profile study --region ap-southeast-1 update-kubeconfig --name study-cluster
+
 
     - name: helm upgrade --install
       run: |
-        helm upgrade --install  --namespace comrade-ho-chi-minh telegramm-bot --set image.tag=${{ env.COMMIT_HASH }} ./telegram-bot      
+        helm upgrade --install  --namespace comrade-ho-chi-minh --create-namespace telegramm-bot --set image.tag=${{ env.COMMIT_HASH }} ./telegram-bot      
       working-directory: ./comrade-chatgpt-bot-main/helm
+

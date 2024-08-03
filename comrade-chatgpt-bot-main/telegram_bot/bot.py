@@ -55,7 +55,7 @@ logging.basicConfig(handlers=enabled_handlers, level=logging.INFO)
 
 
 # set higher logging level for httpx to avoid all GET and POST requests being logged
-# logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +90,9 @@ def healthcheck():
     """Check the health of the bot's dependencies."""
     # openai_ok = check_openai_connection()
     openai_ok = True
+    healthcheck_log = logging.getLogger('werkzeug')
+    healthcheck_log.setLevel(logging.ERROR)
+
 
     status = "OK" if openai_ok else "ERROR"
     return jsonify({"status": status}), 200 if status == "OK" else 500
@@ -314,7 +317,7 @@ def main() -> None:
 def run_flask():
     """Run the Flask app."""
     app.run(debug=False)
-
+###
 
 if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
