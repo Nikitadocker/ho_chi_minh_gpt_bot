@@ -25,7 +25,7 @@ ingress:
 #    nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
 #    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
     nginx.ingress.kubernetes.io/whitelist-source-range: '118.71.133.14'
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "cert-manager"
   ingressClassName: nginx
   host: um-hochiminh.danilevich-it-school.com
   service:
@@ -33,7 +33,7 @@ ingress:
     port:
       number: 5000
   tls:
-    hosts: comrade-ho-chi-minh.space
+    hosts: um-hochiminh.danilevich-it-school.com
     secretName: user-manager-nikita-tls
 
 
