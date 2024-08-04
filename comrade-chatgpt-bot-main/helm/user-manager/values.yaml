@@ -21,12 +21,13 @@ service:
 
 ingress:
   annotations:
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
-    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+#    nginx.ingress.kubernetes.io/auth-type: basic
+#    nginx.ingress.kubernetes.io/auth-secret: user-manager-auth-secret
+#    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required'
+    nginx.ingress.kubernetes.io/whitelist-source-range: '118.71.133.14'
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   ingressClassName: nginx
-  host: comrade-ho-chi-minh.space
+  host: um-hochiminh.danilevich-it-school.com
   service:
     name: user-manager
     port:
