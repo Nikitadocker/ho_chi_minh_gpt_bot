@@ -31,28 +31,3 @@ ingress:
   tls:
     hosts:  webhook.comrade-ho-chi-minh.space
     secretName: telegram-bot-nikita-tls
-
-prometheusRule:
-  group:
-    name: telegram.rules
-  alerts:
-    - alert: AlertmanagerTelegramPodDownNikita
-      expr: |
-        (
-          kube_pod_status_phase{namespace="comrade-ho-chi-minh", phase="Running", pod=~"telegramm.*"} < 1
-        ) OR absent(
-          kube_pod_status_phase{namespace="comrade-ho-chi-minh", phase="Running", pod=~"telegramm.*"}
-        )
-      for: 1m
-      labels:
-        severity: critical
-    - alert: AlertmanagerTelegramPodDownZika
-      expr: |
-        (
-        kube_pod_status_phase{namespace="comrade-chatgpt-bot", phase="Running", pod=~"telegram.*"} < 1
-        ) OR absent(
-        kube_pod_status_phase{namespace="comrade-chatgpt-bot", phase="Running", pod=~"telegram.*"}
-        )
-      for: 1m
-      labels:
-        severity: critical
