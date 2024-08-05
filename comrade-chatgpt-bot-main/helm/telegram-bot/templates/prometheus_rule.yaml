@@ -1,14 +1,14 @@
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: {{ include "telegram-bot.fullname" . }}
-  labels:
-    release: prometheus
-spec:
-  groups:
-    - name: {{ .Values.prometheusRule.group.name }}
-      rules: {{ toYaml .Values.prometheusRule.alerts | indent 8 }}
-
-
+#apiVersion: monitoring.coreos.com/v1
+#kind: PrometheusRule
+#metadata:
+#  name: {{ include "telegram-bot.fullname" . }}
+#  labels:
+#    release: prometheus
+#spec:
+#  groups:
+#    - name: {{ .Values.prometheusRule.group.name }}
+#      rules: {{ toYaml .Values.prometheusRule.alerts | indent 8 }}
+#
+#
 
 
