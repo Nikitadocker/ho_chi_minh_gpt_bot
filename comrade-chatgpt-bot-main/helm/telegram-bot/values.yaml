@@ -21,7 +21,7 @@ service:
 
 ingress:
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "cert-manager"
   ingressClassName: nginx
   host: webhook-hochiminh.danilevich-it-school.com
   service:
