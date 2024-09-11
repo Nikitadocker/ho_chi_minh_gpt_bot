@@ -22,6 +22,7 @@ service:
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: "cert-manager"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "30s"
   ingressClassName: nginx
   host: webhook-hochiminh.danilevich-it-school.com
   service:
