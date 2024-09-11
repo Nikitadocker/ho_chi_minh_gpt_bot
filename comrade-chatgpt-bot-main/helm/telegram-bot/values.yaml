@@ -23,11 +23,11 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   ingressClassName: nginx
-  host: webhook.comrade-ho-chi-minh.space
+  host: webhook-hochiminh.danilevich-it-school.com
   service:
     name: telegramm-bot-telegram-bot
     port:
       number: 8080
   tls:
-    hosts:  webhook.comrade-ho-chi-minh.space
+    hosts:  webhook-hochiminh.danilevich-it-school.com
     secretName: telegram-bot-nikita-tls
