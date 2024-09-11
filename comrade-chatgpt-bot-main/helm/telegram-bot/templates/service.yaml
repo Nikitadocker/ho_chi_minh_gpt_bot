@@ -9,5 +9,6 @@ spec:
     {{- include "telegram-bot.selectorLabels" . | nindent 4 }}
   ports:
     - port: {{ .Values.service.port | default 8443 }}
-      targetPort: {{ .Values.service.targetPort | default 80 }}
+      protocol: TCP
+      targetPort: {{ .Values.service.targetPort | default 8443 }}
   type: {{ .Values.service.type  | default "ClusterIP" }}
