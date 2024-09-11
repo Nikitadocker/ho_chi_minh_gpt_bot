@@ -30,4 +30,4 @@ ingress:
       number: 8080
   tls:
     hosts:  webhook-hochiminh.danilevich-it-school.com
-    secretName: telegram-bot-nikita-tls
+    secretName: telegram-bot-tls
