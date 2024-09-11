@@ -15,7 +15,7 @@ secret:
 
 service:
   ports:
-    - port: 8080
+    - port:  8443
       targetPort: 80
   type: ClusterIP
 
@@ -31,7 +31,7 @@ ingress:
   service:
     name: telegramm-bot-telegram-bot
     port:
-      number: 8080
+      number:  8443
   tls:
     hosts:  webhook-hochiminh.danilevich-it-school.com
     secretName: telegram-bot-tls
