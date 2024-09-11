@@ -16,7 +16,7 @@ secret:
 service:
   ports:
     - port:  8443
-      targetPort: webhook-port
+      targetPort: 443
   type: ClusterIP
 
 ingress:
