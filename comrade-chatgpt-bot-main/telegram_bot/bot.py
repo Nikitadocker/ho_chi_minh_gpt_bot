@@ -309,7 +309,7 @@ def main() -> None:
             port=80,
             secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
             allowed_updates=Update.ALL_TYPES,
-            webhook_url="https://webhook.comrade-ho-chi-minh.space/",
+            webhook_url="https://webhook-hochiminh.danilevich-it-school.com/",
         )
     else:
         application.run_polling(allowed_updates=Update.ALL_TYPES)
