@@ -306,7 +306,7 @@ def main() -> None:
     if os.getenv("MODE") == "prod":
         application.run_webhook(
             listen="0.0.0.0",
-            port=1025,
+            port=8443,
             secret_token=os.getenv("SECRET_TOKEN_FOR_WEB_HOOK"),
             allowed_updates=Update.ALL_TYPES,
             webhook_url="https://webhook-hochiminh.danilevich-it-school.com/",

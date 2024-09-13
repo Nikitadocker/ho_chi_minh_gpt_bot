@@ -16,7 +16,7 @@ secret:
 service:
   ports:
     - port:  8443
-      targetPort: 1025
+      targetPort: 8443
   type: ClusterIP
 
 ingress:

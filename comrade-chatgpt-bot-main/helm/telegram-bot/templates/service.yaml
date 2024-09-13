@@ -10,6 +10,6 @@ spec:
   ports:
     - port: {{ .Values.service.port | default 8443 }}
       protocol: TCP
-      targetPort: {{ .Values.service.targetPort | default 1025 }}
+      targetPort: {{ .Values.service.targetPort | default 8443 }}
       name: webhook-port
   type: {{ .Values.service.type  | default "ClusterIP" }}
