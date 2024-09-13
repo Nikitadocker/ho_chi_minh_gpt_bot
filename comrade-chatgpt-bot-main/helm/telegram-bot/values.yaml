@@ -24,6 +24,8 @@ ingress:
     cert-manager.io/cluster-issuer: "cert-manager"
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
     nginx.org/proxy-read-timeout: "300s"
+    nginx.org/proxy-buffers: "32k"
+    nginx.org/proxy-buffer-size: "64k"
   ingressClassName: nginx
   host: webhook-hochiminh.danilevich-it-school.com
   service:
