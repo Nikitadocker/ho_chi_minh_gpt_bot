@@ -23,6 +23,7 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "cert-manager"
     nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.org/proxy-read-timeout: "300s"
   ingressClassName: nginx
   host: webhook-hochiminh.danilevich-it-school.com
   service:
