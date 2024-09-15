@@ -15,19 +15,20 @@ secret:
 
 service:
   ports:
-    - port: 8080
-      targetPort: 80
+    - port:  8443
+      targetPort: 8443
   type: ClusterIP
 
 ingress:
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    cert-manager.io/cluster-issuer: "cert-manager"
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
   ingressClassName: nginx
-  host: webhook.comrade-ho-chi-minh.space
+  host: webhook-hochiminh.danilevich-it-school.com
   service:
     name: telegramm-bot-telegram-bot
     port:
-      number: 8080
+      number:  8443
   tls:
-    hosts:  webhook.comrade-ho-chi-minh.space
-    secretName: telegram-bot-nikita-tls
+    hosts:  webhook-hochiminh.danilevich-it-school.com
+    secretName: telegram-bot-tls

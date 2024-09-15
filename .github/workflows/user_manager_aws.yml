@@ -59,7 +59,7 @@ jobs:
         aws configure --profile study set region us-east-1
 
     - name: Update kubeconfig
-      run: aws eks --profile study --region ap-southeast-1 update-kubeconfig --name study-cluster
+      run: aws eks --profile study --region eu-central-1 update-kubeconfig --name iac-001-study-cluster
         
     - name: kubectl set image
       run: |

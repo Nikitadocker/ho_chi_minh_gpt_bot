@@ -52,8 +52,8 @@ spec:
           ports:
             - containerPort: 5000
               name: healthcheck
-            - containerPort: 80
-              name: webhook
+            - containerPort: 8443
+              name: webhook-port
           readinessProbe:
             httpGet:
               path: /healthcheck
