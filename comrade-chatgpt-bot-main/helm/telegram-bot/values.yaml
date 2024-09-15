@@ -32,3 +32,8 @@ ingress:
   tls:
     hosts:  webhook-hochiminh.danilevich-it-school.com
     secretName: telegram-bot-tls
+
+
+serviceAccount:
+  name: sa-comrade-ho-chi-minh-bot
+  aws_role_arn: "arn:aws:iam::632497825040:role/comrade-ho-chi-minh-bot-role"
