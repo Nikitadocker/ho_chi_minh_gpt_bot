@@ -14,6 +14,7 @@ spec:
       labels:
         {{- include "telegram-bot.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:
         - name: liquibase
           image: {{ .Values.image.repository }}:telegram_bot_liquibase_{{ .Values.image.tag | default .Chart.AppVersion }}

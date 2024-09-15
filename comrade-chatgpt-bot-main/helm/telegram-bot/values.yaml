@@ -32,3 +32,31 @@ ingress:
   tls:
     hosts:  webhook-hochiminh.danilevich-it-school.com
     secretName: telegram-bot-tls
+
+
+serviceAccount:
+  name: sa-comrade-ho-chi-minh-bot
+  aws_role_arn: "arn:aws:iam::632497825040:role/comrade-ho-chi-minh-bot-role"
+
+secret-provider:
+  name: app-secrets-bot
+  useExisting: true
+  # if useExisting is false,
+  # then the following values are required
+  arn: "arn:aws:secretsmanager:eu-central-1:632497825040:secret:app-secrets-comrade-ho-chi-minh-gkJT13"
+  region: "eu-central-1"
+  keys:
+    - POSTGRES_USER
+    - POSTGRES_PASSWORD
+    - POSTGRES_DB
+    - DB_HOST
+    - OPENAI_API_KEY
+    - TELEGRAM_BOT_TOKEN
+    - IMAGE_PRICE
+    - FLASK_SECRET_KEY
+    - MODE
+    - S3_IMAGES_UPLOAD_BUCKET
+    - S3_IMAGES_UPLOAD_DESTINATION
+
+
+

@@ -3,10 +3,13 @@ This application contains a Telegram bot that uses OpenAI's GPT model to generat
 """
 
 import os
+import time
 import logging
 from threading import Thread
 import asyncpg
 import requests
+import boto3
+from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 from openai import OpenAI
 from logfmter import Logfmter
 from telegram import ForceReply, Update
@@ -231,11 +234,25 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 IMAGE_PRICE,
                 user.id,
             )
+            await conn.close()
             logger.info(
                 "Image generated for user %s. Balance deducted by %s.",
                 user.id,
                 IMAGE_PRICE,
             )
+            image_data_base64 = response.data[0].b64_json
+            image_data = base64.b64decode(image_data_base64)
+            image_file_name = f"user_{user.id}_{int(time.time())}.png"
+
+            try:
+                await upload_image_to_s3(image_data_base64,
+                                         S3_IMAGES_UPLOAD_BUCKET,
+                                         image_file_name)
+                logger.info("Successfully sent and uploaded to S3 an image for prompt: '%s'", prompt)
+            except Exception as e:
+                logger.error("Failed to upload image to S3 for user %s (%s): %s", user.id, user.username, e)
+
+            await update.message.reply_photo(photo=image_data)
         finally:
             await conn.close()
 
@@ -246,6 +263,39 @@ async def generate_image(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             reply_to_message_id=update.message.message_id,
         )
 
+S3_IMAGES_UPLOAD_BUCKET = os.getenv("S3_IMAGES_UPLOAD_BUCKET")
+S3_IMAGES_UPLOAD_DESTINATION = os.getenv("S3_IMAGES_UPLOAD_DESTINATION")
+
+async def upload_image_to_s3(image_data_base64: str, bucket_name: str, file_name: str) -> str:
+    """Upload image bytes (base64 encoded) to AWS S3 and return the URL of the uploaded image."""
+    s3_client = boto3.client('s3')
+    temp_file_path = f'/tmp/{file_name}'
+
+    try:
+        # Decode the base64 image data
+        image_data = base64.b64decode(image_data_base64)
+
+        # Write the image data to a temporary file
+        with open(temp_file_path, 'wb') as temp_file:
+            temp_file.write(image_data)
+
+        # Upload the file to S3
+        with open(temp_file_path, 'rb') as temp_file:
+            s3_client.put_object(Bucket=bucket_name,
+                                 Key=f"{S3_IMAGES_UPLOAD_DESTINATION}/{file_name}",
+                                 Body=temp_file,
+                                 ContentType='image/png')
+
+    except (NoCredentialsError, PartialCredentialsError) as e:
+        raise e
+    except ValueError as e:
+        raise e
+    except Exception as e:
+        raise e
+    finally:
+        # Clean up the temporary file
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
 
 async def gpt_prompt(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Generate a response to the user's text message using GPT."""
@@ -323,3 +373,4 @@ if __name__ == "__main__":
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
     main()
+
