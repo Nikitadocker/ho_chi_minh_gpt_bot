@@ -39,3 +39,11 @@ resources:
   requests:
     cpu: 500m
     memory: 256Mi
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector:
+  node.kubernetes.io/instance-type: t3.medium
