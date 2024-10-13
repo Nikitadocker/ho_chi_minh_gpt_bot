@@ -299,6 +299,7 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("image", generate_image))
+    application.add_handler(CommandHandler("cpu_load", cpu_load))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, gpt_prompt))
 
     # Run the bot until the user presses Ctrl-C
@@ -313,6 +314,27 @@ def main() -> None:
         )
     else:
         application.run_polling(allowed_updates=Update.ALL_TYPES)
+
+async def cpu_load(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Meaningless CPU load."""
+    user = update.effective_user
+    logger.info("User %s (%s) requested CPU load",
+                user.id, user.username)
+
+    # Generate CPU load
+    def intensive_task():
+        logger.info("Starting intensive task...")
+        # Current time plus the time you want to run the load for (e.g., 5 seconds)
+        end_time = time.time() + 5
+        while time.time() < end_time:
+            # Perform some meaningless calculations
+            _ = sum(i * i for i in range(100000))
+        logger.info("Finished intensive task.")
+
+    # Although the function is async, the load generation can be a blocking call
+    intensive_task()
+
+    return
 
 def run_flask():
     """Run the Flask app."""
