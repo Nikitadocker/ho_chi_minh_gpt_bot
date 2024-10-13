@@ -47,3 +47,7 @@ hpa:
 
 nodeSelector:
   node.kubernetes.io/instance-type: t3.medium
+
+serviceAccount:
+  name: sa-comrade-ho-chi-minh-bot
+  aws_role_arn: ""
