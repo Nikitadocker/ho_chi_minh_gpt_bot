@@ -1,6 +1,7 @@
 [MESSAGES CONTROL]
 
 disable=broad-exception-caught
+disable=unused-argument
 
 [FORMAT]
 max-line-length=140
