@@ -3,6 +3,7 @@ This application contains a Telegram bot that uses OpenAI's GPT model to generat
 """
 
 import os
+import time
 import logging
 from threading import Thread
 import asyncpg
