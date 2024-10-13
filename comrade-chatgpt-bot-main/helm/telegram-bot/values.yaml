@@ -32,3 +32,10 @@ ingress:
   tls:
     hosts:  webhook-hochiminh.danilevich-it-school.com
     secretName: telegram-bot-tls
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 500m
+    memory: 256Mi

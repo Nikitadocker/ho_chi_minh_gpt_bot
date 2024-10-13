@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "telegram-bot.labels" . | nindent 4 }}
 spec:
+  nodeSelector:
+    { { - toYaml .Values.nodeSelector | nindent 8 } }
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -49,6 +51,8 @@ spec:
         - name: telegram-bot
           image: {{ .Values.image.repository }}:telegram_bot_{{ .Values.image.tag | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            { { - toYaml .Values.resources | nindent 12 } }
           ports:
             - containerPort: 5000
               name: healthcheck
